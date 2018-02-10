@@ -1,0 +1,37 @@
+.filemanager-wrap {
+    overflow-y: auto;
+}
+.filemanager-wrap .row {
+
+}
+.filemanager-wrap .list-item {
+    float: left;
+    width: 33.33333333%;
+}
+.filemanager-wrap .item,
+.filemanager-wrap .item p {
+    text-align: center;
+}
+.filemanager-wrap .item img {
+    border: 2px solid #ddd;
+    cursor: pointer;
+}
+.filemanager-wrap .item .file-thumb.selected,
+.filemanager-wrap .item img:hover {
+    border-color: #337ab7;
+}
+.filemanager-wrap .item p {
+    max-width: 100%;
+    margin-top: 3px;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.filemanager-wrap .item .folder-icon {
+    cursor: pointer;
+}
+.filemanager-wrap .pagination {
+    margin: 10px 0;
+}
