@@ -59,16 +59,21 @@ class m180124_142808_create_shop_product_table extends Migration
             'created_at'
         );
 
-        $this->insert($this->tableName, [
-            'price' => 100.55,
-            'quantity' => 100,
-            'weight' => 1.05,
-            'slug' => 'test-product',
-            'title' => 'Test Product',
-            'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mi urna, ultricies a interdum sed, euismod a urna. Nulla malesuada consectetur mi, in malesuada neque dignissim sed. Vivamus vitae enim quis erat molestie malesuada pellentesque a diam. Mauris nisl leo, bibendum nec eleifend ut, feugiat sed lectus. Duis at nisi eget augue lacinia eleifend. Sed hendrerit justo vitae leo finibus, et pretium massa convallis. Proin enim velit, viverra et quam ut, viverra facilisis magna. Mauris sollicitudin aliquam ultricies.',
-            'created_at' => time(),
-            'updated_at' => time(),
-        ]);
+        $faker = \Faker\Factory::create();
+
+        // Add fake data
+        for ($i = 0; $i < 10; $i++) {
+            $this->insert($this->tableName, [
+                'price' => $faker->randomFloat(2, 50, 500),
+                'quantity' => $faker->numberBetween(50, 200),
+                'weight' => $faker->randomFloat(2, 1, 20),
+                'slug' => $faker->slug(3),
+                'title' => $faker->text(32),
+                'content' => $faker->randomHtml(4, 6),
+                'created_at' => time(),
+                'updated_at' => time(),
+            ]);
+        }
     }
 
     /**

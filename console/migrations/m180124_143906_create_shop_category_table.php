@@ -52,12 +52,17 @@ class m180124_143906_create_shop_category_table extends Migration
             'created_at'
         );
 
-        $this->insert($this->tableName, [
-            'slug' => 'test-category',
-            'title' => 'Test Category',
-            'created_at' => time(),
-            'updated_at' => time(),
-        ]);
+        $faker = \Faker\Factory::create();
+
+        // Add fake data
+        for ($i = 0; $i < 5; $i++) {
+            $this->insert($this->tableName, [
+                'slug' => $faker->slug(3),
+                'title' => $faker->text(32),
+                'created_at' => time(),
+                'updated_at' => time(),
+            ]);
+        }
     }
 
     /**

@@ -71,25 +71,20 @@ class m180117_131906_create_cms_post_table extends Migration
             'created_at'
         );
 
-        // Add data
-        $this->insert($this->tableName, [
-            'author' => 1,
-            'slug' => 'hello-world',
-            'title' => 'Hello world!',
-            'content' => 'This is your first post. Edit or delete it, then start writing!',
-            'created_at' => time(),
-            'updated_at' => time(),
-        ]);
+        $faker = \Faker\Factory::create();
 
-        $this->insert($this->tableName, [
-            'author' => 1,
-            'slug' => 'sample-page',
-            'title' => 'Sample Page',
-            'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mi urna, ultricies a interdum sed, euismod a urna. Nulla malesuada consectetur mi, in malesuada neque dignissim sed. Vivamus vitae enim quis erat molestie malesuada pellentesque a diam. Mauris nisl leo, bibendum nec eleifend ut, feugiat sed lectus. Duis at nisi eget augue lacinia eleifend. Sed hendrerit justo vitae leo finibus, et pretium massa convallis. Proin enim velit, viverra et quam ut, viverra facilisis magna. Mauris sollicitudin aliquam ultricies.',
-            'type' => 'page',
-            'created_at' => time(),
-            'updated_at' => time(),
-        ]);
+        // Add fake data
+        for ($i = 0; $i < 12; $i++) {
+            $this->insert($this->tableName, [
+                'author' => 1,
+                'slug' => $faker->slug(3),
+                'title' => $faker->text(32),
+                'content' => $faker->randomHtml(4, 6),
+                'type' => $faker->randomElement(['post', 'page']),
+                'created_at' => time(),
+                'updated_at' => time(),
+            ]);
+        }
     }
 
     /**
