@@ -63,7 +63,11 @@ class TranslateInput extends \yii\bootstrap\Widget
                     $inputValue = $translate[$attr];
                 }
             } else {
-                $inputValue = '';
+                try {
+                    $inputValue = $this->model->{$attr};
+                } catch (\Exception $e) {
+                    $inputValue = '';
+                }
             }
 
             if (isset($attrOption['type'])) {
