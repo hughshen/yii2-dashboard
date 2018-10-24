@@ -7,17 +7,11 @@ use Yii;
 trait SlugTrait
 {
     /**
-     * Get slug from string
+     * Slug prefix
      */
-    public function getSlug($string)
+    public function slugPrefix()
     {
-        $string = preg_replace(
-            ['/\s/', '/_/', '/-+/', '/[^\w\s-\x7f-\xff]/'],
-            ['-', '-', '-', ''],
-            $string
-        );
-
-        return strtolower($string);
+        return '';
     }
 
     /**
@@ -29,7 +23,7 @@ trait SlugTrait
             if (empty($this->slug)) {
                 $this->slug = $default;
             }
-            $this->slug = $this->getSlug($this->slug);
+            $this->slug = \yii\helpers\Inflector::slug($this->slugPrefix() . $this->slug);
             $this->slug = $this->uniqueSlug($this->slug);
         } catch (\Exception $e) {
             throw $e;
