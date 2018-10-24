@@ -5,42 +5,9 @@ namespace backend\modules\cms\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 
-class Category extends \yii\db\ActiveRecord
+class Category extends \common\models\cms\Category
 {
-    use \common\traits\CacheTrait;
-    use \common\traits\SlugTrait;
-    use \common\traits\TranslateTrait;
-    use \common\traits\ExtraDataTrait;
     use \common\traits\CrudModelTrait;
-
-    public $seo_title;
-    public $seo_keywords;
-    public $seo_description;
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-        $this->type = static::typeName();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%cms_category}}';
-    }
-
-    /**
-     * Return type name
-     */
-    public static function typeName()
-    {
-        return 'category';
-    }
 
     /**
      * @inheritdoc
@@ -144,30 +111,6 @@ class Category extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRelationships()
-    {
-        return $this->hasMany(Relationship::className(), ['category_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPosts()
-    {
-        return $this->hasMany(Post::className(), ['id' => 'post_id'])->viaTable(Relationship::tableName(), ['category_id' => 'id'])->andOnCondition(['status' => Post::STATUS_PUBLISH, 'type' => Post::typeName()])->orderBy('sorting ASC, created_at DESC');
-    }
-
-    /**
-     * Get parent category
-     */
-    public function getParentCategory()
-    {
-        return $this->hasOne(static::className(), ['id' => 'parent']);
-    }
-
-    /**
      * Update children when delete record
      */
     public function updateChildren()
@@ -175,17 +118,6 @@ class Category extends \yii\db\ActiveRecord
         Yii::$app->db->createCommand()
             ->update(self::tableName(), ['parent' => $this->parent], ['parent' => $this->id])
             ->execute();
-    }
-
-    /**
-     * Return status list
-     */
-    public static function statusList()
-    {
-        return [
-            '1' => Yii::t('app', 'Show'),
-            '0' => Yii::t('app', 'Hide'),
-        ];
     }
 
     /**

@@ -7,14 +7,14 @@ use common\widgets\ExtraFieldInput;
 use backend\modules\cms\models\Category;
 use backend\modules\cms\models\Tag;
 
-$categoryIds = ArrayHelper::getColumn($model->getCategories()->asArray()->all(), 'id');
+$ids = ArrayHelper::getColumn($model->getRelationships()->asArray()->all(), 'category_id');
 ?>
 <?= ExtraFieldInput::widget([
     'options' => [
         'inputId' => 'post-category',
         'inputName' => 'Categories[]',
         'inputType' => 'checkboxlist',
-        'defaultValue' => $categoryIds,
+        'defaultValue' => $ids,
         'valueList' => ArrayHelper::map(Category::categoryList(), 'id', 'title'),
         'inputLabel' => 'Categories',
     ],
@@ -25,7 +25,7 @@ $categoryIds = ArrayHelper::getColumn($model->getCategories()->asArray()->all(),
         'inputId' => 'post-tag',
         'inputName' => 'Categories[]',
         'inputType' => 'checkboxlist',
-        'defaultValue' => $categoryIds,
+        'defaultValue' => $ids,
         'valueList' => ArrayHelper::map(Tag::categoryList(), 'id', 'title'),
         'inputLabel' => 'Tags',
     ],

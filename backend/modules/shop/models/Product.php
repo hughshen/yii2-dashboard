@@ -4,25 +4,9 @@ namespace backend\modules\shop\models;
 
 use Yii;
 
-class Product extends \yii\db\ActiveRecord
+class Product extends \common\models\shop\Product
 {
-    use \common\traits\CacheTrait;
-    use \common\traits\SlugTrait;
-    use \common\traits\TranslateTrait;
-    use \common\traits\ExtraDataTrait;
     use \common\traits\CrudModelTrait;
-
-    public $seo_title;
-    public $seo_keywords;
-    public $seo_description;
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%shop_product}}';
-    }
 
     /**
      * @inheritdoc
@@ -73,14 +57,6 @@ class Product extends \yii\db\ActiveRecord
             'seo_keywords' => Yii::t('app', 'SEO Keywords'),
             'seo_description' => Yii::t('app', 'SEO Description'),
         ];
-    }
-
-    /**
-     * If has trash
-     */
-    public function hasTrash()
-    {
-        return false;
     }
 
     /**
@@ -147,31 +123,6 @@ class Product extends \yii\db\ActiveRecord
     }
 
     /**
-     * Fake delete
-     */
-    public function moveToTrash()
-    {
-        $this->deleted_at = time();
-        $this->status = self::STATUS_TRASH;
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRelationships()
-    {
-        return $this->hasMany(Relationship::className(), ['product_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCategories()
-    {
-        return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable(Relationship::tableName(), ['product_id' => 'id'])->andOnCondition(['status' => 1])->orderBy('sorting ASC, created_at DESC');
-    }
-
-    /**
      * Set categories data
      */
     public function setCategories($data)
@@ -181,16 +132,5 @@ class Product extends \yii\db\ActiveRecord
             $model = Category::findOne($cid);
             $this->link('categories', $model);
         }
-    }
-
-    /**
-     * Return status list
-     */
-    public static function statusList()
-    {
-        return [
-            '1' => Yii::t('app', 'Show'),
-            '0' => Yii::t('app', 'Hide'),
-        ];
     }
 }

@@ -44,7 +44,8 @@ class MenuSearch extends Menu
     {
         $query = Menu::find()
             ->with('parentMenu')
-            ->andWhere(['type' => Menu::typeName()]);
+            ->andWhere(['type' => Menu::typeName()])
+            ->groupBy('id');
 
         // add conditions that should always apply here
 

@@ -43,7 +43,8 @@ class PageSearch extends Page
     {
         $query = Page::find()
             ->andWhere(['type' => Page::typeName()])
-            ->andWhere(['!=', 'status', Page::STATUS_TRASH]);
+            ->andWhere(['!=', 'status', Page::STATUS_TRASH])
+            ->groupBy('id');
 
         // add conditions that should always apply here
 

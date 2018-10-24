@@ -4,48 +4,9 @@ namespace backend\modules\cms\models;
 
 use Yii;
 
-class Post extends \yii\db\ActiveRecord
+class Post extends \common\models\cms\Post
 {
-    use \common\traits\CacheTrait;
-    use \common\traits\SlugTrait;
-    use \common\traits\TranslateTrait;
-    use \common\traits\ExtraDataTrait;
     use \common\traits\CrudModelTrait;
-
-    const STATUS_PUBLISH = 'publish';
-    const STATUS_DRAFT = 'draft';
-    const STATUS_TRASH = 'trash';
-
-    public $publish_at;
-
-    public $seo_title;
-    public $seo_keywords;
-    public $seo_description;
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-        $this->type = static::typeName();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%cms_post}}';
-    }
-
-    /**
-     * Return type name
-     */
-    public static function typeName()
-    {
-        return 'post';
-    }
 
     /**
      * @inheritdoc
@@ -98,35 +59,6 @@ class Post extends \yii\db\ActiveRecord
     }
 
     /**
-     * If has trash
-     */
-    public function hasTrash()
-    {
-        return false;
-    }
-
-    /**
-     * Slug prefix
-     */
-    public function slugPrefix()
-    {
-        return '';
-    }
-
-    public function extraFields()
-    {
-        $this->extractExtraData();
-        return [
-            [
-                'fieldName' => 'view_count',
-                'inputLabel' => Yii::t('app', 'View Count'),
-                'valueData' => $this->extraData,
-                'defaultValue' => $this->getExtraValue('view_count'),
-            ],
-        ];
-    }
-
-    /**
      * Save model
      */
     public function saveModel()
@@ -138,7 +70,7 @@ class Post extends \yii\db\ActiveRecord
         }
 
         $this->combineTranslate(Yii::$app->request->post('Translate'));
-        $this->setSlug($this->slugPrefix() . $this->title);
+        $this->setSlug($this->title);
 
         if (!$this->validate()) {
             Yii::$app->session->setFlash('error', implode('<br>', (array)$this->getFirstErrors()));
@@ -151,6 +83,7 @@ class Post extends \yii\db\ActiveRecord
             $this->saveExtraData();
             $this->save();
 
+            $this->setTags(Yii::$app->request->post('Categories', []));
             $this->setCategories(Yii::$app->request->post('Categories', []));
             $this->saveTranslate(Yii::$app->request->post('Translate'));
 
@@ -192,31 +125,35 @@ class Post extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * Custom fields
      */
-    public function getRelationships()
+    public function extraFields()
     {
-        return $this->hasMany(Relationship::className(), ['post_id' => 'id']);
+        $this->extractExtraData();
+        return [
+            [
+                'fieldName' => 'view_count',
+                'inputLabel' => Yii::t('app', 'View Count'),
+                'valueData' => $this->extraData,
+                'defaultValue' => $this->getExtraValue('view_count'),
+            ],
+        ];
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * Set tags
      */
-    public function getCategories()
+    public function setTags($data)
     {
-        return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable(Relationship::tableName(), ['post_id' => 'id'])->andOnCondition(['status' => 1, 'type' => Category::typeName()])->orderBy('sorting ASC, created_at DESC');
+        if (!$this->isNewRecord) $this->unlinkAll('tags', true);
+        foreach ($data as $key => $cid) {
+            $model = Tag::findOne($cid);
+            $this->link('tags', $model);
+        }
     }
 
     /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTags()
-    {
-        return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable(Relationship::tableName(), ['post_id' => 'id'])->andOnCondition(['status' => 1, 'type' => Tag::typeName()])->orderBy('sorting ASC, created_at DESC');
-    }
-
-    /**
-     * Set categories data
+     * Set categories
      */
     public function setCategories($data)
     {
@@ -225,26 +162,5 @@ class Post extends \yii\db\ActiveRecord
             $model = Category::findOne($cid);
             $this->link('categories', $model);
         }
-    }
-
-    /**
-     * Fake delete
-     */
-    public function moveToTrash()
-    {
-        $this->deleted_at = time();
-        $this->status = self::STATUS_TRASH;
-    }
-
-    /**
-     * Return status list
-     */
-    public static function statusList()
-    {
-        return [
-            self::STATUS_PUBLISH => Yii::t('app', 'Publish'),
-            self::STATUS_DRAFT => Yii::t('app', 'Draft'),
-            // self::STATUS_TRASH => Yii::t('app', 'Trash'),
-        ];
     }
 }

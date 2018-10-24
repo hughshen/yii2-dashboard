@@ -4,7 +4,7 @@ namespace backend\modules\cms\models;
 
 use Yii;
 
-class Relationship extends \yii\db\ActiveRecord
+class Relationship extends \common\models\cms\Relationship
 {
     /**
      * @inheritdoc
@@ -36,21 +36,5 @@ class Relationship extends \yii\db\ActiveRecord
             'post_id' => Yii::t('app', 'Post ID'),
             'category_id' => Yii::t('app', 'Category ID'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCategory()
-    {
-        return $this->hasOne(Category::className(), ['id' => 'category_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPost()
-    {
-        return $this->hasOne(Post::className(), ['id' => 'post_id']);
     }
 }

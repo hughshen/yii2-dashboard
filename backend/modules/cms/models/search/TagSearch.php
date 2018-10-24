@@ -42,7 +42,8 @@ class TagSearch extends Tag
     public function search($params)
     {
         $query = Tag::find()
-            ->andWhere(['type' => Tag::typeName()]);
+            ->andWhere(['type' => Tag::typeName()])
+            ->groupBy('id');
 
         // add conditions that should always apply here
 

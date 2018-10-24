@@ -5,25 +5,9 @@ namespace backend\modules\shop\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 
-class Category extends \yii\db\ActiveRecord
+class Category extends \common\models\shop\Category
 {
-    use \common\traits\CacheTrait;
-    use \common\traits\SlugTrait;
-    use \common\traits\TranslateTrait;
-    use \common\traits\ExtraDataTrait;
     use \common\traits\CrudModelTrait;
-
-    public $seo_title;
-    public $seo_keywords;
-    public $seo_description;
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%shop_category}}';
-    }
 
     /**
      * @inheritdoc
@@ -124,30 +108,6 @@ class Category extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRelationships()
-    {
-        return $this->hasMany(Relationship::className(), ['category_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProducts()
-    {
-        return $this->hasMany(Product::className(), ['id' => 'product_id'])->viaTable(Relationship::tableName(), ['category_id' => 'id'])->andOnCondition(['status' => 1])->orderBy('sorting ASC, created_at DESC');
-    }
-
-    /**
-     * Get parent category
-     */
-    public function getParentCategory()
-    {
-        return $this->hasOne(static::className(), ['id' => 'parent']);
-    }
-
-    /**
      * Update children when delete record
      */
     public function updateChildren()
@@ -155,17 +115,6 @@ class Category extends \yii\db\ActiveRecord
         Yii::$app->db->createCommand()
             ->update(self::tableName(), ['parent' => $this->parent], ['parent' => $this->id])
             ->execute();
-    }
-
-    /**
-     * Return status list
-     */
-    public static function statusList()
-    {
-        return [
-            '1' => Yii::t('app', 'Show'),
-            '0' => Yii::t('app', 'Hide'),
-        ];
     }
 
     /**

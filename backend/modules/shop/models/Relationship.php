@@ -4,7 +4,7 @@ namespace backend\modules\shop\models;
 
 use Yii;
 
-class Relationship extends \yii\db\ActiveRecord
+class Relationship extends \common\models\shop\Relationship
 {
     /**
      * @inheritdoc
@@ -36,21 +36,5 @@ class Relationship extends \yii\db\ActiveRecord
             'product_id' => Yii::t('app', 'Product ID'),
             'category_id' => Yii::t('app', 'Category ID'),
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCategory()
-    {
-        return $this->hasOne(Category::className(), ['id' => 'category_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProduct()
-    {
-        return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
 }

@@ -43,8 +43,9 @@ class CategorySearch extends Category
     public function search($params)
     {
         $query = Category::find()
-            ->with('parentCategory')
-            ->andWhere(['type' => Category::typeName()]);
+            ->with('parent')
+            ->andWhere(['type' => Category::typeName()])
+            ->groupBy('id');
 
         // add conditions that should always apply here
 

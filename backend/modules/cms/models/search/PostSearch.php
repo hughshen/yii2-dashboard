@@ -43,7 +43,8 @@ class PostSearch extends Post
     {
         $query = Post::find()
             ->andWhere(['type' => Post::typeName()])
-            ->andWhere(['!=', 'status', Post::STATUS_TRASH]);
+            ->andWhere(['!=', 'status', Post::STATUS_TRASH])
+            ->groupBy('id');
 
         // add conditions that should always apply here
 
