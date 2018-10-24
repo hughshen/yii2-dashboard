@@ -80,6 +80,7 @@ class m180117_131906_create_cms_post_table extends Migration
                 'slug' => $faker->slug(3),
                 'title' => $faker->text(32),
                 'content' => $faker->randomHtml(4, 6),
+                'excerpt' => $faker->text(250),
                 'type' => $faker->randomElement(['post', 'page']),
                 'created_at' => time(),
                 'updated_at' => time(),

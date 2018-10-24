@@ -70,6 +70,7 @@ class m180124_142808_create_shop_product_table extends Migration
                 'slug' => $faker->slug(3),
                 'title' => $faker->text(32),
                 'content' => $faker->randomHtml(4, 6),
+                'description' => $faker->text(250),
                 'created_at' => time(),
                 'updated_at' => time(),
             ]);
