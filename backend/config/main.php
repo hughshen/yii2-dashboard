@@ -6,14 +6,19 @@ $params = array_merge(
     require __DIR__ . '/params-local.php'
 );
 
-$modules = require __DIR__ . '/modules.php';
-
 return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => $modules,
+    'modules' => [
+        'cms' => [
+            'class' => 'backend\modules\cms\Module',
+        ],
+        'shop' => [
+            'class' => 'backend\modules\shop\Module',
+        ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
