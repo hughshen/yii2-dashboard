@@ -121,6 +121,13 @@ a.desc:after {
 
 /* Add */
 
+table td {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .tab-content {
     padding-top: 10px;
 }
