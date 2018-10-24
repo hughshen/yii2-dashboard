@@ -128,6 +128,6 @@ class Category extends \common\models\shop\Category
             ->asArray()
             ->all();
 
-        return static::combineTranslatedData($data);;
+        return static::combineTranslatedData($data);
     }
 }

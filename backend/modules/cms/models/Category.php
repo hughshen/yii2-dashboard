@@ -134,6 +134,6 @@ class Category extends \common\models\cms\Category
             ->asArray()
             ->all();
 
-        return static::combineTranslatedData($data);;
+        return static::combineTranslatedData($data);
     }
 }
