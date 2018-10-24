@@ -170,7 +170,7 @@ class User extends ActiveRecord implements IdentityInterface
             'username' => $username,
             'status' => self::STATUS_ACTIVE,
             'role' => self::ROLE_USER,
-            'role_group' => GROUP_FRONTEND,
+            'role_group' => self::GROUP_FRONTEND,
         ]);
     }
 
