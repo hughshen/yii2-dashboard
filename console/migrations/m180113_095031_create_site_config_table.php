@@ -22,13 +22,13 @@ class m180113_095031_create_site_config_table extends Migration
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
         }
 
         $this->createTable($this->tableName, [
             'id' => $this->primaryKey(),
-            'option_name' => $this->string()->notNull(),
-            'option_value' => $this->text(),
+            'option_name' => $this->string()->notNull()->defaultValue(''),
+            'option_value' => $this->text()->defaultValue(''),
             'autoload' => $this->smallInteger(1)->notNull()->defaultValue(0),
         ], $tableOptions);
 
@@ -69,12 +69,6 @@ class m180113_095031_create_site_config_table extends Migration
      */
     public function down()
     {
-        // drops index for column `option_name`
-        $this->dropIndex(
-            'idx-site-config-option_name',
-            $this->tableName
-        );
-        
         $this->dropTable($this->tableName);
     }
 }

@@ -22,25 +22,26 @@ class m180117_131906_create_cms_post_table extends Migration
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
         }
         
         $this->createTable($this->tableName, [
             'id' => $this->primaryKey(),
             'parent' => $this->integer()->notNull()->defaultValue(0),
             'author' => $this->integer()->notNull()->defaultValue(0),
-            'slug' => $this->string(),
-            'title' => $this->string(),
-            'content' => $this->text(),
-            'excerpt' => $this->text(),
-            'guid' => $this->string(),
-            'type' => $this->string(16)->notNull()->defaultValue('post'),
-            'extra_data' => $this->text(),
+            'slug' => $this->string()->notNull()->defaultValue(''),
+            'title' => $this->string()->notNull()->defaultValue(''),
+            'content' => $this->text()->defaultValue(''),
+            'excerpt' => $this->text()->defaultValue(''),
+            'guid' => $this->string()->notNull()->defaultValue(''),
+            'type' => $this->string(16)->notNull()->defaultValue(''),
+            'view_count' => $this->integer()->notNull()->defaultValue(0),
+            'extra_data' => $this->text()->defaultValue(''),
             'sorting' => $this->integer()->notNull()->defaultValue(0),
             'status' => $this->string()->notNull()->defaultValue('publish'),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
-            'deleted_at' => $this->integer(),
+            'created_at' => $this->integer()->notNull()->defaultValue(0),
+            'updated_at' => $this->integer()->notNull()->defaultValue(0),
+            'deleted_at' => $this->integer()->notNull()->defaultValue(0),
         ], $tableOptions);
 
         // creates index for column `type`
@@ -93,30 +94,6 @@ class m180117_131906_create_cms_post_table extends Migration
      */
     public function down()
     {
-        // drops index for column `type`
-        $this->dropIndex(
-            'idx-cms-post-type',
-            $this->tableName
-        );
-
-        // drops index for column `slug`
-        $this->dropIndex(
-            'idx-cms-post-slug',
-            $this->tableName
-        );
-
-        // drops index for column `status`
-        $this->dropIndex(
-            'idx-cms-post-status',
-            $this->tableName
-        );
-
-        // drops index for column `created_at`
-        $this->dropIndex(
-            'idx-cms-post-created_at',
-            $this->tableName
-        );
-
         $this->dropTable($this->tableName);
     }
 }

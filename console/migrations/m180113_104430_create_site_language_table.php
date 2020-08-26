@@ -22,20 +22,20 @@ class m180113_104430_create_site_language_table extends Migration
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
         }
 
         $this->createTable($this->tableName, [
             'id' => $this->primaryKey(),
-            'title' => $this->string()->notNull(),
-            'code' => $this->string(16)->notNull(),
-            'locale' => $this->string(16)->notNull(),
-            'image' => $this->string(),
-            'is_default' => $this->smallInteger(1)->defaultValue(0),
-            'sorting' => $this->integer()->defaultValue(0),
-            'status' => $this->smallInteger(1)->defaultValue(1),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
+            'title' => $this->string()->notNull()->defaultValue(''),
+            'code' => $this->string(16)->notNull()->defaultValue(''),
+            'locale' => $this->string(16)->notNull()->defaultValue(''),
+            'image' => $this->string()->notNull()->defaultValue(''),
+            'is_default' => $this->smallInteger(1)->notNull()->defaultValue(0),
+            'sorting' => $this->integer()->notNull()->defaultValue(0),
+            'status' => $this->smallInteger(1)->notNull()->defaultValue(1),
+            'created_at' => $this->integer()->notNull()->defaultValue(0),
+            'updated_at' => $this->integer()->notNull()->defaultValue(0),
         ], $tableOptions);
 
         $this->insert($this->tableName, [

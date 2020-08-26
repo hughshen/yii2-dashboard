@@ -22,7 +22,7 @@ class m180124_142808_create_shop_product_table extends Migration
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
         }
 
         $this->createTable($this->tableName, [
@@ -30,19 +30,19 @@ class m180124_142808_create_shop_product_table extends Migration
             'price' => $this->decimal(9, 2)->notNull()->defaultValue(0.00),
             'quantity' => $this->integer()->notNull()->defaultValue(0),
             'weight' => $this->decimal(9, 2)->notNull()->defaultValue(0.00),
-            'slug' => $this->string(),
-            'title' => $this->string(),
-            'content' => $this->text(),
-            'description' => $this->text(),
-            'image' => $this->string(),
-            'images' => $this->text(),
-            'view_count' => $this->integer()->defaultValue(0),
-            'extra_data' => $this->text(),
+            'slug' => $this->string()->notNull()->defaultValue(''),
+            'title' => $this->string()->notNull()->defaultValue(''),
+            'content' => $this->text()->defaultValue(''),
+            'description' => $this->text()->defaultValue(''),
+            'image' => $this->string()->notNull()->defaultValue(''),
+            'images' => $this->text()->defaultValue(''),
+            'view_count' => $this->integer()->notNull()->defaultValue(0),
+            'extra_data' => $this->text()->defaultValue(''),
             'sorting' => $this->integer()->notNull()->defaultValue(0),
             'status' => $this->smallInteger(1)->notNull()->defaultValue(1),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
-            'deleted_at' => $this->integer(),
+            'created_at' => $this->integer()->notNull()->defaultValue(0),
+            'updated_at' => $this->integer()->notNull()->defaultValue(0),
+            'deleted_at' => $this->integer()->notNull()->defaultValue(0),
         ], $tableOptions);
 
         // creates index for column `slug`
@@ -82,18 +82,6 @@ class m180124_142808_create_shop_product_table extends Migration
      */
     public function down()
     {
-        // drops index for column `slug`
-        $this->dropIndex(
-            'idx-shop-product-slug',
-            $this->tableName
-        );
-
-        // drops index for column `created_at`
-        $this->dropIndex(
-            'idx-shop-product-created_at',
-            $this->tableName
-        );
-
         $this->dropTable($this->tableName);
     }
 }

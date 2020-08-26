@@ -22,18 +22,18 @@ class m180113_103619_create_site_translate_table extends Migration
     {
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+            $tableOptions = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB';
         }
 
         $this->createTable($this->tableName, [
             'id' => $this->primaryKey(),
-            'table_name' => $this->string(32)->notNull(),
-            'table_id' => $this->integer()->notNull(),
-            'table_field' => $this->string()->notNull(),
-            'field_value' => $this->text(),
-            'language' => $this->string(32)->notNull(),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
+            'table_name' => $this->string(32)->notNull()->defaultValue(''),
+            'table_id' => $this->integer()->notNull()->defaultValue(0),
+            'table_field' => $this->string()->notNull()->defaultValue(''),
+            'field_value' => $this->text()->defaultValue(''),
+            'language' => $this->string(32)->notNull()->defaultValue(''),
+            'created_at' => $this->integer()->notNull()->defaultValue(0),
+            'updated_at' => $this->integer()->notNull()->defaultValue(0),
         ], $tableOptions);
 
         // creates index for column `table_name`
@@ -70,30 +70,6 @@ class m180113_103619_create_site_translate_table extends Migration
      */
     public function down()
     {
-        // drops index for column `table_name`
-        $this->dropIndex(
-            'idx-site-translate-table_name',
-            $this->tableName
-        );
-
-        // drops index for column `table_id`
-        $this->dropIndex(
-            'idx-site-translate-table_id',
-            $this->tableName
-        );
-
-        // drops index for column `table_field`
-        $this->dropIndex(
-            'idx-site-translate-table_field',
-            $this->tableName
-        );
-
-        // drops index for column `language`
-        $this->dropIndex(
-            'idx-site-translate-language',
-            $this->tableName
-        );
-        
         $this->dropTable($this->tableName);
     }
 }
