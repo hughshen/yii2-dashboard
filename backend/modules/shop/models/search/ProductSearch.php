@@ -5,7 +5,6 @@ namespace backend\modules\shop\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-
 use backend\modules\shop\models\Product;
 
 /**

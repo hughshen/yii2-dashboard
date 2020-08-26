@@ -4,7 +4,6 @@ namespace common\traits;
 
 use Yii;
 use yii\helpers\ArrayHelper;
-
 use common\models\Language;
 use common\models\Translate;
 

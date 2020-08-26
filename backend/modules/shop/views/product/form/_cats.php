@@ -1,8 +1,8 @@
 <?php
+
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
-
 use common\widgets\ExtraFieldInput;
 use backend\modules\shop\models\Category;
 

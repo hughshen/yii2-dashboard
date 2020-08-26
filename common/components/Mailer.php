@@ -3,7 +3,6 @@
 namespace common\components;
 
 use Yii;
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use common\models\Config;

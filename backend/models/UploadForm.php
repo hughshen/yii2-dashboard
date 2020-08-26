@@ -4,7 +4,6 @@ namespace backend\models;
 
 use Yii;
 use yii\base\Model;
-
 use common\models\Media;
 
 class UploadForm extends Model

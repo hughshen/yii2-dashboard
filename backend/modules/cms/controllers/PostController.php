@@ -3,7 +3,6 @@
 namespace backend\modules\cms\controllers;
 
 use Yii;
-
 use backend\modules\cms\models\Post;
 use backend\modules\cms\models\search\PostSearch;
 

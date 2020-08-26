@@ -2,7 +2,6 @@
 
 use yii\helpers\Url;
 use yii\helpers\Html;
-
 use common\widgets\TranslateInput;
 use backend\modules\cms\models\Page;
 

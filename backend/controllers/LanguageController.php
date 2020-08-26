@@ -3,7 +3,6 @@
 namespace backend\controllers;
 
 use Yii;
-
 use common\models\Language;
 use backend\models\search\LanguageSearch;
 

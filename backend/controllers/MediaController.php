@@ -6,7 +6,6 @@ use Yii;
 use yii\web\Response;
 use yii\web\UploadedFile;
 use yii\data\Pagination;
-
 use common\models\Media;
 use backend\models\UploadForm;
 

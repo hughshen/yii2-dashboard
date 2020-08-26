@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
 use common\widgets\TranslateInput;
 use backend\modules\cms\models\Menu;
 

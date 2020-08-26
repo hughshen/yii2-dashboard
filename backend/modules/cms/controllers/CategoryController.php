@@ -4,7 +4,6 @@ namespace backend\modules\cms\controllers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
-
 use backend\modules\cms\models\Category;
 use backend\modules\cms\models\search\CategorySearch;
 

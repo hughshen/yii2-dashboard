@@ -4,7 +4,6 @@ namespace backend\controllers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
-
 use common\models\Config;
 
 class ConfigController extends BackendController
