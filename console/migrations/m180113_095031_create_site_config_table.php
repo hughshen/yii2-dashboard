@@ -28,7 +28,7 @@ class m180113_095031_create_site_config_table extends Migration
         $this->createTable($this->tableName, [
             'id' => $this->primaryKey(),
             'option_name' => $this->string()->notNull()->defaultValue(''),
-            'option_value' => $this->text()->defaultValue(''),
+            'option_value' => $this->text()->notNull()->defaultValue(''),
             'autoload' => $this->smallInteger(1)->notNull()->defaultValue(0),
         ], $tableOptions);
 

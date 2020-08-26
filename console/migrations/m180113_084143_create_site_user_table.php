@@ -34,7 +34,7 @@ class m180113_084143_create_site_user_table extends Migration
             'email' => $this->string()->notNull()->unique()->defaultValue(''),
             'role' => $this->string(32)->notNull()->defaultValue(''),
             'role_group' => $this->string(32)->notNull()->defaultValue(''),
-            'extra_data' => $this->text()->defaultValue(''),
+            'extra_data' => $this->text()->notNull()->defaultValue(''),
             'status' => $this->smallInteger()->notNull()->defaultValue(10),
             'created_at' => $this->integer()->notNull()->defaultValue(0),
             'updated_at' => $this->integer()->notNull()->defaultValue(0),

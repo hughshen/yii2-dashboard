@@ -30,7 +30,7 @@ class m180113_103619_create_site_translate_table extends Migration
             'table_name' => $this->string(32)->notNull()->defaultValue(''),
             'table_id' => $this->integer()->notNull()->defaultValue(0),
             'table_field' => $this->string()->notNull()->defaultValue(''),
-            'field_value' => $this->text()->defaultValue(''),
+            'field_value' => $this->text()->notNull()->defaultValue(''),
             'language' => $this->string(32)->notNull()->defaultValue(''),
             'created_at' => $this->integer()->notNull()->defaultValue(0),
             'updated_at' => $this->integer()->notNull()->defaultValue(0),
