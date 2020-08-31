@@ -56,14 +56,9 @@ class Menu extends \common\models\cms\Menu
         $data = self::combineTranslatedData($data);
 
         // Extra data
-        if (isset($data['extra_data'])) {
-            $extra = @json_decode($data['extra_data'], true);
-            if (is_array($extra) && $extra) {
-                foreach ($extra as $key => $val) {
-                    $data[$key] = $val;
-                }
-            }
-            unset($data['extra_data']);
+        $data['extra_data'] = @json_decode($data['extra_data'], true);
+        if (!is_array($data['extra_data'])) {
+            $data['extra_data'] = [];
         }
 
         return $data;
