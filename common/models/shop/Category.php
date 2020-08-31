@@ -16,9 +16,26 @@ class Category extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function init()
+    {
+        parent::init();
+        $this->type = static::typeName();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public static function tableName()
     {
         return '{{%shop_category}}';
+    }
+
+    /**
+     * Return type name
+     */
+    public static function typeName()
+    {
+        return 'category';
     }
 
     /**

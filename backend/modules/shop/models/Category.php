@@ -17,6 +17,7 @@ class Category extends \common\models\shop\Category
         return [
             [['title'], 'required'],
             [['parent', 'sorting', 'created_at', 'updated_at'], 'integer'],
+            [['type'], 'string', 'max' => 32],
             [['slug', 'title', 'image'], 'string', 'max' => 255],
             [['description', 'extra_data'], 'string'],
             [['parent', 'sorting'], 'default', 'value' => 0],
@@ -38,6 +39,7 @@ class Category extends \common\models\shop\Category
             'slug' => Yii::t('app', 'Slug'),
             'title' => Yii::t('app', 'Title'),
             'description' => Yii::t('app', 'Description'),
+            'type' => Yii::t('app', 'Type'),
             'image' => Yii::t('app', 'Image'),
             'extra_data' => Yii::t('app', 'Extra Data'),
             'sorting' => Yii::t('app', 'Sorting'),
