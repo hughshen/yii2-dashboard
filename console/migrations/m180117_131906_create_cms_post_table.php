@@ -35,6 +35,8 @@ class m180117_131906_create_cms_post_table extends Migration
             'excerpt' => $this->text()->notNull()->defaultValue(''),
             'guid' => $this->string()->notNull()->defaultValue(''),
             'type' => $this->string(16)->notNull()->defaultValue(''),
+            'image' => $this->string()->notNull()->defaultValue(''),
+            'images' => $this->text()->notNull()->defaultValue(''),
             'view_count' => $this->integer()->notNull()->defaultValue(0),
             'extra_data' => $this->text()->notNull()->defaultValue(''),
             'sorting' => $this->integer()->notNull()->defaultValue(0),
