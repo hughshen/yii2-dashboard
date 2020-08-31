@@ -1,16 +1,15 @@
 <?php
 
-namespace backend\modules\cms\models\search;
+namespace backend\modules\cms\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\modules\cms\models\Page;
 
 /**
- * PageSearch represents the model behind the search form about `backend\modules\cms\models\Page`.
+ * MenuSearch represents the model behind the search form about `backend\modules\cms\models\Menu`.
  */
-class PageSearch extends Page
+class MenuSearch extends Menu
 {
     /**
      * @inheritdoc
@@ -18,7 +17,8 @@ class PageSearch extends Page
     public function rules()
     {
         return [
-            [['slug', 'title', 'excerpt', 'status'], 'string'],
+            ['parent', 'integer'],
+            [['slug', 'title', 'description'], 'safe'],
         ];
     }
 
@@ -40,9 +40,10 @@ class PageSearch extends Page
      */
     public function search($params)
     {
-        $query = Page::find()
-            ->andWhere(['type' => Page::typeName()])
-            ->andWhere(['!=', 'status', Page::STATUS_TRASH])
+        $query = Menu::find()
+            ->with('prevCat')
+            ->andWhere(['type' => Menu::typeName()])
+            ->andWhere(['=', 'deleted_at', 0])
             ->groupBy('id');
 
         // add conditions that should always apply here
@@ -55,6 +56,9 @@ class PageSearch extends Page
                     'id' => SORT_DESC,
                 ],
             ],
+            'pagination' => [
+                'pageSize' => Yii::$app->params['tablePageSize'],
+            ],
         ]);
 
         $this->load($params);
@@ -65,13 +69,12 @@ class PageSearch extends Page
             return $dataProvider;
         }
 
+        $query->andFilterWhere(['parent' => $this->parent]);
         $query->andFilterWhere(['like', 'slug', $this->slug]);
-        $query->andFilterWhere(['like', 'status', $this->status]);
 
         // Translate
-        $query = Page::leftJoinTranslate($query);
-        $query = Page::fieldFilterTranslate($query, 'title', $this->title);
-        $query = Page::fieldFilterTranslate($query, 'excerpt', $this->excerpt);
+        $query = Menu::leftJoinTranslate($query);
+        $query = Menu::fieldFilterTranslate($query, 'title', $this->title);
 
         return $dataProvider;
     }

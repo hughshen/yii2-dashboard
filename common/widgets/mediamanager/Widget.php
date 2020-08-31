@@ -25,10 +25,24 @@ class Widget extends \yii\bootstrap\InputWidget
 
         $this->registerClientScript();
 
+        $viewStyle = 'width: 100px; height: 100px; overflow: hidden; margin-bottom: 10px;';
+        if (!$inputValue) {
+            $viewStyle .= ' display: none;';
+        }
+
         $input = '';
         $input .= Html::beginTag('div', ['class' => 'image-input-wrap', 'style' => 'position: relative;']);
+        // View
+        $input .= Html::tag('div', Html::tag('div', Html::img($inputValue, [
+            'style' => 'height: 100px; width: auto;',
+        ])), [
+            'id' => $this->id . '-view',
+            'class' => 'image-input-view',
+            'style' => $viewStyle,
+        ]);
+        // View end
         $input .= Html::textInput($inputName, $inputValue, ['class' => 'form-control', 'id' => $this->id, 'style' => 'padding-left: 45px;']);
-        $input .= Html::tag('span', '<i class="glyphicon glyphicon-picture"></i>', ['class' => 'btn btn-success media-manager-toggle', 'style' => 'position: absolute; bottom: 0; left: 0;']);
+        $input .= Html::tag('span', '<i class="glyphicon glyphicon-picture"></i>', ['class' => 'btn btn-success media-manager-toggle', 'style' => 'margin-bottom: 0px; position: absolute; bottom: 0; left: 0;']);
         $input .= Html::endTag('div');
 
         return $input;
@@ -42,6 +56,7 @@ class Widget extends \yii\bootstrap\InputWidget
         $view->registerJs('
         initMediaManager({
             target: "#' . $this->id . '",
+            targetView: "#' . $this->id . '-view",
             managerUrl: "' . Url::to(['/media/manager-list']) . '",
         });
         ', \yii\web\View::POS_END);

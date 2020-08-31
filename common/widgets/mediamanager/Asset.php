@@ -6,9 +6,7 @@ use yii\web\AssetBundle;
 
 class Asset extends AssetBundle
 {
-    public $css = [
-        'css/custom.css',
-    ];
+    public $css = [];
     public $js = [
         'js/custom.js',
     ];

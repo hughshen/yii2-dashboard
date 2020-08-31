@@ -4,7 +4,7 @@ namespace backend\modules\cms\controllers;
 
 use Yii;
 use backend\modules\cms\models\Page;
-use backend\modules\cms\models\search\PageSearch;
+use backend\modules\cms\models\PageSearch;
 
 /**
  * PageController implements the CRUD actions for Page model.

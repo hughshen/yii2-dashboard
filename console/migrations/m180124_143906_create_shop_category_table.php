@@ -31,6 +31,7 @@ class m180124_143906_create_shop_category_table extends Migration
             'slug' => $this->string()->notNull()->defaultValue(''),
             'title' => $this->string()->notNull()->defaultValue(''),
             'description' => $this->text()->notNull()->defaultValue(''),
+            'image' => $this->string()->notNull()->defaultValue(''),
             'extra_data' => $this->text()->notNull()->defaultValue(''),
             'sorting' => $this->integer()->notNull()->defaultValue(0),
             'status' => $this->smallInteger(1)->notNull()->defaultValue(1),

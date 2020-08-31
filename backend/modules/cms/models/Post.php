@@ -15,12 +15,12 @@ class Post extends \common\models\cms\Post
     {
         return [
             [['title'], 'required'],
-            [['author', 'sorting', 'created_at', 'updated_at'], 'integer'],
-            [['slug', 'title', 'guid'], 'string', 'max' => 255],
-            [['content', 'excerpt', 'extra_data'], 'string'],
+            [['author', 'view_count', 'sorting', 'created_at', 'updated_at'], 'integer'],
+            [['slug', 'title', 'guid', 'image'], 'string', 'max' => 255],
+            [['content', 'excerpt', 'extra_data', 'images'], 'string'],
             ['type', 'string', 'max' => 16],
             ['type', 'default', 'value' => static::typeName()],
-            [['author', 'parent', 'sorting'], 'default', 'value' => 0],
+            [['author', 'parent', 'view_count', 'sorting'], 'default', 'value' => 0],
             ['status', 'default', 'value' => 'publish'],
             [['created_at', 'updated_at'], 'default', 'value' => time()],
             // Add
@@ -44,6 +44,9 @@ class Post extends \common\models\cms\Post
             'excerpt' => Yii::t('app', 'Excerpt'),
             'guid' => Yii::t('app', 'Guid'),
             'type' => Yii::t('app', 'Type'),
+            'image' => Yii::t('app', 'Image'),
+            'images' => Yii::t('app', 'Images'),
+            'view_count' => Yii::t('app', 'View Count'),
             'extra_data' => Yii::t('app', 'Extra Data'),
             'sorting' => Yii::t('app', 'Sorting'),
             'status' => Yii::t('app', 'Status'),
@@ -73,8 +76,7 @@ class Post extends \common\models\cms\Post
         $this->setSlug($this->title);
 
         if (!$this->validate()) {
-            Yii::$app->session->setFlash('error', implode('<br>', (array)$this->getFirstErrors()));
-            return false;
+            throw new \yii\base\Exception(implode('<br>', (array)$this->getFirstErrors()));
         };
 
         $transaction = Yii::$app->db->beginTransaction();
@@ -89,27 +91,23 @@ class Post extends \common\models\cms\Post
 
             $transaction->commit();
 
-            Yii::$app->session->setFlash('success', 'Updated successfully.');
-
             return $this;
         } catch (\Exception $e) {
             $transaction->rollBack();
             throw $e;
         }
-
-        return false;
     }
 
     /**
      * Delete model
      */
-    public function deleteModel()
+    public function deleteModel($fake = true)
     {
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            if ($this->hasTrash()) {
-                $this->moveToTrash();
-                $this->save();
+            if ($fake) {
+                $this->deleted_at = time();
+                $this->update(false);
             } else {
                 $this->unlinkAll('categories', true);
                 $this->deleteAllTranslate();
@@ -117,27 +115,9 @@ class Post extends \common\models\cms\Post
             }
 
             $transaction->commit();
-
-            Yii::$app->session->setFlash('success', 'Deleted successfully.');
         } catch (\Exception $e) {
             throw $e;
         }
-    }
-
-    /**
-     * Custom fields
-     */
-    public function extraFields()
-    {
-        $this->extractExtraData();
-        return [
-            [
-                'fieldName' => 'view_count',
-                'inputLabel' => Yii::t('app', 'View Count'),
-                'valueData' => $this->extraData,
-                'defaultValue' => $this->getExtraValue('view_count'),
-            ],
-        ];
     }
 
     /**

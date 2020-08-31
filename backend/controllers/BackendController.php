@@ -16,6 +16,8 @@ class BackendController extends Controller
 {
     use \common\traits\LanguageTrait;
 
+    public $panelContent = true;
+
     /**
      * @inheritdoc
      */
@@ -67,6 +69,6 @@ class BackendController extends Controller
 
     public function throwNotFound()
     {
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page or data does not exist'));
     }
 }

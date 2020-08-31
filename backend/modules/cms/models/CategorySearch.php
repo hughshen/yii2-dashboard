@@ -1,11 +1,10 @@
 <?php
 
-namespace backend\modules\cms\models\search;
+namespace backend\modules\cms\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\modules\cms\models\Category;
 
 /**
  * CategorySearch represents the model behind the search form about `backend\modules\cms\models\Category`.
@@ -42,8 +41,9 @@ class CategorySearch extends Category
     public function search($params)
     {
         $query = Category::find()
-            ->with('parent')
+            ->with('prevCat')
             ->andWhere(['type' => Category::typeName()])
+            ->andWhere(['=', 'deleted_at', 0])
             ->groupBy('id');
 
         // add conditions that should always apply here
@@ -55,6 +55,9 @@ class CategorySearch extends Category
                     'sorting' => SORT_ASC,
                     'id' => SORT_DESC,
                 ],
+            ],
+            'pagination' => [
+                'pageSize' => Yii::$app->params['tablePageSize'],
             ],
         ]);
 

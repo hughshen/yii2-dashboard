@@ -1,69 +1,93 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model \common\models\LoginForm */
-
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\captcha\Captcha;
-use common\widgets\Alert;
 
-\backend\assets\AppAsset::register($this);
+\yiister\gentelella\assets\Asset::register($this);
 
 $this->title = 'Login';
 ?>
 <?php $this->beginPage() ?>
-<!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
-<head>
-    <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
-    <style>
-        .site-login {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-    </style>
-</head>
-<body>
-<?php $this->beginBody() ?>
+    <!DOCTYPE html>
+    <html lang="<?= Yii::$app->language ?>">
+    <head>
+        <meta charset="<?= Yii::$app->charset ?>">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <?= Html::csrfMetaTags() ?>
+        <title><?= Html::encode($this->title) ?></title>
+        <?php $this->head() ?>
+        <style>
+            .login_wrapper {
+                margin-top: 0;
+            }
 
-<div class="wrap">
-    <div class="container">
-        <?= Alert::widget() ?>
-        <div class="site-login">
-            <h1><?= Html::encode($this->title) ?></h1>
+            .login_content {
+                padding-top: 100px;
+            }
 
-            <p>Please fill out the following fields to login:</p>
+            .captcha-area .form-group img {
+                float: right;
+                height: 40px;
+            }
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+            .captcha-area .form-group input {
+                max-width: 65%;
+            }
 
-                        <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+            .help-block {
+                text-align: left;
+            }
 
-                        <?= $form->field($model, 'password')->passwordInput() ?>
+            .form-group {
+                margin-bottom: 20px;
+            }
 
-                        <?= $form->field($model, 'verifyCode')->widget(Captcha::className()) ?>
+            .form-group input {
+                height: 40px;
+                margin-bottom: 0 !important;
+            }
+        </style>
+    </head>
+    <body class="login">
+    <?php $this->beginBody() ?>
+    <div class="login_wrapper">
+        <div class="form login_form">
+            <section class="login_content">
+                <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-                        <?= $form->field($model, 'rememberMe')->checkbox() ?>
+                <h1><?= Html::encode($this->title) ?></h1>
 
-                        <div class="form-group">
-                            <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                        </div>
+                <?= $form->field($model, 'username')->textInput([
+                    'autofocus' => true,
+                    'placeholder' => $model->getAttributeLabel('username')
+                ])->label(false) ?>
 
-                    <?php ActiveForm::end(); ?>
+                <?= $form->field($model, 'password')->passwordInput([
+                    'placeholder' => $model->getAttributeLabel('password')
+                ])->label(false) ?>
+
+                <div class="captcha-area">
+                    <?= $form->field($model, 'verifyCode')->widget(Captcha::className(), [
+                        'options' => [
+                            'class' => 'form-control',
+                            'placeholder' => $model->getAttributeLabel('verifyCode')
+                        ],
+                    ])->label(false) ?>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <?php ActiveForm::end(); ?>
+            </section>
         </div>
     </div>
-</div>
 
-<?php $this->endBody() ?>
-</body>
-</html>
+    <?php $this->endBody() ?>
+    </body>
+    </html>
 <?php $this->endPage() ?>

@@ -1,166 +1,65 @@
-html,
-body {
-    height: 100%;
-}
-
-.wrap {
-    min-height: 100%;
-    height: auto;
-    margin: 0 auto -60px;
-    padding: 0 0 60px;
-}
-
-.wrap > .container {
-    padding: 70px 15px 20px;
-}
-
-.footer {
-    height: 60px;
-    background-color: #f5f5f5;
-    border-top: 1px solid #ddd;
-    padding-top: 20px;
-}
-
-.jumbotron {
-    text-align: center;
-    background-color: transparent;
-}
-
-.jumbotron .btn {
-    font-size: 21px;
-    padding: 14px 24px;
-}
-
-.not-set {
-    color: #c55;
-    font-style: italic;
-}
-
-/* add sorting icons to gridview sort links */
-a.asc:after, a.desc:after {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    padding-left: 5px;
-}
-
-a.asc:after {
-    content: /*"\e113"*/ "\e151";
-}
-
-a.desc:after {
-    content: /*"\e114"*/ "\e152";
-}
-
-.sort-numerical a.asc:after {
-    content: "\e153";
-}
-
-.sort-numerical a.desc:after {
-    content: "\e154";
-}
-
-.sort-ordinal a.asc:after {
-    content: "\e155";
-}
-
-.sort-ordinal a.desc:after {
-    content: "\e156";
-}
-
-.grid-view td {
-    white-space: nowrap;
-}
-
-.grid-view .filters input,
-.grid-view .filters select {
-    min-width: 50px;
-}
-
-.hint-block {
-    display: block;
-    margin-top: 5px;
-    color: #999;
-}
-
-.error-summary {
-    color: #a94442;
-    background: #fdf7f7;
-    border-left: 3px solid #eed3d7;
-    padding: 10px 20px;
-    margin: 0 0 15px 0;
-}
-
-/* align the logout "link" (button in form) of the navbar */
-.nav li > form > button.logout {
-    padding: 15px;
-    border: none;
-}
-
-@media(max-width:767px) {
-    .nav li > form > button.logout {
-        display:block;
-        text-align: left;
-        width: 100%;
-        padding: 10px 15px;
-    }
-}
-
-.nav > li > form > button.logout:focus,
-.nav > li > form > button.logout:hover {
-    text-decoration: none;
-}
-
-.nav > li > form > button.logout:focus {
-    outline: none;
-}
-
-/* Add */
-
-table td {
-    max-width: 250px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.tab-content {
+/* Site */
+.tab-content > .tab-pane {
     padding-top: 10px;
 }
 
-.media-item {
+/* Media */
+#media-wrap {
+    padding: 10px;
+    max-height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.media-box .media-item {
+    width: 170px;
+    height: 170px;
+    max-width: 150px;
+    max-height: 150px;
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+    float: left;
+    border: 2px solid #e8e8e8;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.media-box .media-item:hover {
+    border-color: #337ab7;
+}
+
+.media-item .media-thumbnail {
+    max-height: 100px;
+    overflow: hidden;
+    margin-bottom: 1rem;
     text-align: center;
-    margin-bottom: 20px;
 }
 
-.media-item .thumbnail {
-    margin: 0;
-    position: relative;
-    height: 110px;
+.media-item .media-thumbnail img {
+    width: auto;
+    height: 100px;
 }
 
-.media-item .thumbnail img {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-.media-item .caption {
-    color: #333;
-    background: #f7f7f7;
-    padding: 9px;
-    border-radius: 4px;
-}
-
-.media-item .caption .name {
-    padding-right: 3px;
+.media-item .media-caption .name {
     display: inline-block;
     max-width: 80%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    vertical-align: middle;
+}
+
+.media-item .media-name {
+    text-align: center;
+}
+
+.media-item .media-name .name {
+    max-width: 100%;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.media-item .media-caption > a {
+    float: right;
 }

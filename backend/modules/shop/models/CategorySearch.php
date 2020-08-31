@@ -1,16 +1,15 @@
 <?php
 
-namespace backend\models\search;
+namespace backend\modules\shop\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Language;
 
 /**
- * LanguageSearch represents the model behind the search form about `common\models\Language`.
+ * CategorySearch represents the model behind the search form about `backend\modules\shop\models\Category`.
  */
-class LanguageSearch extends Language
+class CategorySearch extends Category
 {
     /**
      * @inheritdoc
@@ -18,8 +17,8 @@ class LanguageSearch extends Language
     public function rules()
     {
         return [
-            [['id', 'is_default', 'sorting', 'status'], 'integer'],
-            [['title', 'code', 'locale'], 'safe'],
+            ['parent', 'integer'],
+            [['slug', 'title', 'description'], 'safe'],
         ];
     }
 
@@ -41,14 +40,23 @@ class LanguageSearch extends Language
      */
     public function search($params)
     {
-        $query = Language::find();
+        $query = Category::find()
+            ->with('prevCat')
+            ->andWhere(['=', 'deleted_at', 0])
+            ->groupBy('id');
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
-                'defaultOrder' => ['sorting' => SORT_ASC],
+                'defaultOrder' => [
+                    'sorting' => SORT_ASC,
+                    'id' => SORT_DESC,
+                ],
+            ],
+            'pagination' => [
+                'pageSize' => Yii::$app->params['tablePageSize'],
             ],
         ]);
 
@@ -60,17 +68,12 @@ class LanguageSearch extends Language
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'is_default' => $this->is_default,
-            'sorting' => $this->sorting,
-            'status' => $this->status,
-        ]);
+        $query->andFilterWhere(['parent' => $this->parent]);
+        $query->andFilterWhere(['like', 'slug', $this->slug]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'code', $this->code])
-            ->andFilterWhere(['like', 'locale', $this->locale]);
+        // Translate
+        $query = Category::leftJoinTranslate($query);
+        $query = Category::fieldFilterTranslate($query, 'title', $this->title);
 
         return $dataProvider;
     }

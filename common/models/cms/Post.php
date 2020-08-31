@@ -14,7 +14,6 @@ class Post extends \yii\db\ActiveRecord
 
     const STATUS_PUBLISH = 'publish';
     const STATUS_DRAFT = 'draft';
-    const STATUS_TRASH = 'trash';
 
     public $publish_at;
 
@@ -41,23 +40,6 @@ class Post extends \yii\db\ActiveRecord
     public static function typeName()
     {
         return 'post';
-    }
-
-    /**
-     * If has trash
-     */
-    public function hasTrash()
-    {
-        return false;
-    }
-
-    /**
-     * Fake delete
-     */
-    public function moveToTrash()
-    {
-        $this->deleted_at = time();
-        $this->status = self::STATUS_TRASH;
     }
 
     /**
@@ -92,7 +74,6 @@ class Post extends \yii\db\ActiveRecord
         return [
             self::STATUS_PUBLISH => Yii::t('app', 'Publish'),
             self::STATUS_DRAFT => Yii::t('app', 'Draft'),
-            // self::STATUS_TRASH => Yii::t('app', 'Trash'),
         ];
     }
 }

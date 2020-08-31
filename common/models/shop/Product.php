@@ -21,23 +21,6 @@ class Product extends \yii\db\ActiveRecord
     }
 
     /**
-     * If has trash
-     */
-    public function hasTrash()
-    {
-        return false;
-    }
-
-    /**
-     * Fake delete
-     */
-    public function moveToTrash()
-    {
-        $this->deleted_at = time();
-        $this->status = self::STATUS_TRASH;
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getRelationships()

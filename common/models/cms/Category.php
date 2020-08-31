@@ -57,33 +57,33 @@ class Category extends \yii\db\ActiveRecord
     /**
      * Get parent category
      */
-    public function getParent()
+    public function getPrevCat()
     {
-        return $this->hasOne(static::className(), ['id' => 'parent']);
+        return $this->hasOne(static::class, ['id' => 'parent']);
     }
 
     /**
      * Get parent categories
      */
-    public function getParents()
+    public function getPrevCats()
     {
-        return $this->hasMany(static::className(), ['id' => 'parent']);
+        return $this->hasMany(static::class, ['id' => 'parent']);
     }
 
     /**
      * Get child category
      */
-    public function getChild()
+    public function getNextCat()
     {
-        return $this->hasOne(static::className(), ['parent' => 'id']);
+        return $this->hasOne(static::class, ['parent' => 'id']);
     }
 
     /**
      * Get children categories
      */
-    public function getChildren()
+    public function getNextCats()
     {
-        return $this->hasMany(static::className(), ['parent' => 'id']);
+        return $this->hasMany(static::class, ['parent' => 'id']);
     }
 
     /**

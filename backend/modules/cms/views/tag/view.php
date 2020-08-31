@@ -9,8 +9,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tag-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
@@ -42,13 +40,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'status',
             [
                 'attribute' => 'created_at',
-                'value' => function($model) {
+                'value' => function ($model) {
                     return date('Y-m-d H:i:s', $model->created_at);
                 }
             ],
             [
                 'attribute' => 'updated_at',
-                'value' => function($model) {
+                'value' => function ($model) {
                     return date('Y-m-d H:i:s', $model->updated_at);
                 }
             ],

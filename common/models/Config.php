@@ -19,31 +19,6 @@ class Config extends \yii\db\ActiveRecord
         return '{{%site_config}}';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['option_name'], 'required'],
-            [['option_name'], 'string', 'max' => 255],
-            [['option_value'], 'string'],
-            ['autoload', 'default', 'value' => 0],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'option_name' => Yii::t('app', 'Option'),
-            'option_value' => Yii::t('app', 'Value'),
-        ];
-    }
-
     protected static function _query($condition = [])
     {
         return self::find()->select(['option_name', 'option_value'])->where($condition);
@@ -56,7 +31,7 @@ class Config extends \yii\db\ActiveRecord
 
     public static function allData($condition = [])
     {
-        return Yii::$app->cache->getOrSet(self::ALL_CACHE_KEY, function() use ($condition) {
+        return Yii::$app->cache->getOrSet(self::ALL_CACHE_KEY, function () use ($condition) {
             $data = self::_query()->asArray()->all();
             return self::_combine($data);
         });

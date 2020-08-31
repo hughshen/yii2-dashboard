@@ -11,6 +11,10 @@ use frontend\assets\AppAsset;
 use common\widgets\Alert;
 
 AppAsset::register($this);
+
+$menus = $this->context->menus;
+$headerMenus = $this->context->groupMenus('header-menu');
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -43,12 +47,10 @@ AppAsset::register($this);
     ];
 
     // Header menus
-    $allMenus = $this->context->menus;
-    $headerMenus = \backend\modules\cms\models\Menu::groupList('header-menu', $allMenus);
     foreach ($headerMenus as $firstMenu) {
-        if (isset($allMenus[$firstMenu['id']])) {
+        if (isset($menus[$firstMenu['id']])) {
             $firstMenuItems = [];
-            foreach ($allMenus[$firstMenu['id']] as $secondMenu) {
+            foreach ($menus[$firstMenu['id']] as $secondMenu) {
                 $firstMenuItems[] = [
                     'label' => $secondMenu['title'],
                     'url' => $secondMenu['menu_url'],

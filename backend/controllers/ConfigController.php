@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use yii\web\NotFoundHttpException;
-use common\models\Config;
+use backend\models\Config;
 
 class ConfigController extends BackendController
 {
@@ -25,12 +25,8 @@ class ConfigController extends BackendController
 
     public function actionFlushCache()
     {
-        Yii::$app->cache->flush();
-        if (Yii::$app->cache instanceof \yii\caching\FileCache) {
-            Yii::$app->fileCacheFrontend->flush();
-        }
-
-        Yii::$app->session->setFlash('success', 'Deletes all values from cache.');
+        Config::flushCache();
+        Yii::$app->session->setFlash('success', 'Deletes all values from cache');
 
         return $this->redirect(['index']);
     }
@@ -59,16 +55,16 @@ class ConfigController extends BackendController
                     $updated = true;
                 }
             }
-            
+
             if ($updated) {
                 Config::flushCache();
-                Yii::$app->session->setFlash('success', Yii::t('app', 'Site config update success.'));
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Site config update success'));
             } else {
-                Yii::$app->session->setFlash('info', Yii::t('app', 'Nothing changed.'));
+                Yii::$app->session->setFlash('info', Yii::t('app', 'Nothing changed'));
             }
         }
 
-        return $this->redirect(['index']);      
+        return $this->redirect(['index']);
     }
 
     protected function findModel($option_name)
@@ -76,7 +72,7 @@ class ConfigController extends BackendController
         if (($model = Config::findOne(['option_name' => $option_name])) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist'));
         }
     }
 
@@ -105,11 +101,11 @@ class ConfigController extends BackendController
 
                 if (is_bool($result) && $result === true) {
                     $data['status'] = 1;
-                    $data['msg'] = Yii::t('app', 'Test email has been sent, please check your mailbox.');
+                    $data['msg'] = Yii::t('app', 'Test email has been sent, please check your mailbox');
                 } elseif (is_string($result)) {
                     $data['msg'] = $result;
                 } else {
-                    $data['msg'] = Yii::t('app', 'Message could not be sent.');
+                    $data['msg'] = Yii::t('app', 'Message could not be sent');
                 }
             }
         }

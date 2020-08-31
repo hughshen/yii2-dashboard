@@ -38,9 +38,11 @@ return [
         ],
         /*
         'urlManager' => [
+            'scriptUrl' => '/index.php',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/' => 'site/index',
             ],
         ],
         */

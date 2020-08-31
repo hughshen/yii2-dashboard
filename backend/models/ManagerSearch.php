@@ -1,16 +1,16 @@
 <?php
 
-namespace backend\modules\cms\models\search;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\modules\cms\models\Menu;
+use common\models\User;
 
 /**
- * MenuSearch represents the model behind the search form about `backend\modules\cms\models\Menu`.
+ * ManagerSearch represents the model behind the search form about `common\models\User`.
  */
-class MenuSearch extends Menu
+class ManagerSearch extends User
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class MenuSearch extends Menu
     public function rules()
     {
         return [
-            ['parent', 'integer'],
-            [['slug', 'title', 'description'], 'safe'],
+            [['status'], 'integer'],
+            [['username', 'email', 'role'], 'safe'],
         ];
     }
 
@@ -41,20 +41,19 @@ class MenuSearch extends Menu
      */
     public function search($params)
     {
-        $query = Menu::find()
-            ->with('parentMenu')
-            ->andWhere(['type' => Menu::typeName()])
-            ->groupBy('id');
+        $query = User::find();
+        $query->where(['role_group' => User::GROUP_BACKEND]);
+        $query->andWhere(['=', 'deleted_at', 0]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
-                'defaultOrder' => [
-                    'sorting' => SORT_ASC,
-                    'id' => SORT_DESC,
-                ],
+                'defaultOrder' => ['created_at' => SORT_DESC],
+            ],
+            'pagination' => [
+                'pageSize' => Yii::$app->params['tablePageSize'],
             ],
         ]);
 
@@ -66,12 +65,14 @@ class MenuSearch extends Menu
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['parent' => $this->parent]);
-        $query->andFilterWhere(['like', 'slug', $this->slug]);
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'status' => $this->status,
+        ]);
 
-        // Translate
-        $query = Menu::leftJoinTranslate($query);
-        $query = Menu::fieldFilterTranslate($query, 'title', $this->title);
+        $query->andFilterWhere(['like', 'username', $this->username])
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'role', $this->role]);
 
         return $dataProvider;
     }

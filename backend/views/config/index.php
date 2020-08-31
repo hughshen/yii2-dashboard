@@ -10,8 +10,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="config-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <div class="config-form">
 
         <?php $form = ActiveForm::begin([
@@ -22,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
         echo Tabs::widget([
             'items' => [
                 [
-                    'label' => Yii::t('app' ,'Base'),
+                    'label' => Yii::t('app', 'Base'),
                     'content' => $this->render('_base', [
                         'config' => $config,
                     ]),
@@ -30,12 +28,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 [
                     'label' => Yii::t('app', 'Translate'),
-                    'content' => $this->render('_trans', [
+                    'content' => $this->render('_tran', [
                         'config' => $config,
                     ]),
                 ],
                 [
-                    'label' => Yii::t('app' ,'Mail'),
+                    'label' => Yii::t('app', 'Mail'),
                     'content' => $this->render('_mail', [
                         'config' => $config,
                     ]),

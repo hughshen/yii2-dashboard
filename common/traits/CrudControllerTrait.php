@@ -7,9 +7,11 @@ use Yii;
 trait CrudControllerTrait
 {
     abstract public function render($view, $params = []);
+
     abstract public function redirect($url, $statusCode = 302);
 
     abstract protected function getModelClassName();
+
     abstract protected function getSearchClassName();
 
     protected function newClassName($class)
@@ -34,11 +36,21 @@ trait CrudControllerTrait
         return $model;
     }
 
+    protected function getQueryParams()
+    {
+        return Yii::$app->request->queryParams;
+    }
+
+    protected function defaultRedirect()
+    {
+        return $this->redirect(['index']);
+    }
+
     public function actionIndex()
     {
         $searchClassName = $this->newClassName($this->getSearchClassName());
         $searchModel = new $searchClassName;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search($this->getQueryParams());
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -51,9 +63,15 @@ trait CrudControllerTrait
         $model = $this->findModel();
         $model = $this->initModel($model);
 
-        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) && $model->saveModel()) {
-            return $this->redirect(['index']);
-            // return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
+            try {
+                $model->saveModel();
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Create success'));
+            } catch (\Exception $e) {
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
+
+            return $this->defaultRedirect();
         }
 
         return $this->render('create', [
@@ -66,9 +84,15 @@ trait CrudControllerTrait
         $model = $this->findModel($id);
         $model = $this->initModel($model);
 
-        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) && $model->saveModel()) {
-            return $this->redirect(['index']);
-            // return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
+            try {
+                $model->saveModel();
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Update success'));
+            } catch (\Exception $e) {
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
+
+            return $this->defaultRedirect();
         }
 
         return $this->render('update', [
@@ -85,8 +109,13 @@ trait CrudControllerTrait
 
     public function actionDelete($id)
     {
-        $this->findModel($id)->deleteModel();
+        try {
+            $this->findModel($id)->deleteModel();
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Delete success'));
+        } catch (\Exception $e) {
+            Yii::$app->session->setFlash('error', $e->getMessage());
+        }
 
-        return $this->redirect(['index']);
+        return $this->defaultRedirect();
     }
 }

@@ -1,16 +1,15 @@
 <?php
 
-namespace backend\modules\shop\models\search;
+namespace backend\modules\shop\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\modules\shop\models\Category;
 
 /**
- * CategorySearch represents the model behind the search form about `backend\modules\shop\models\Category`.
+ * ProductSearch represents the model behind the search form of `backend\modules\shop\models\Product`.
  */
-class CategorySearch extends Category
+class ProductSearch extends Product
 {
     /**
      * @inheritdoc
@@ -18,8 +17,7 @@ class CategorySearch extends Category
     public function rules()
     {
         return [
-            ['parent', 'integer'],
-            [['slug', 'title', 'description'], 'safe'],
+            [['slug', 'title', 'status'], 'string'],
         ];
     }
 
@@ -41,8 +39,8 @@ class CategorySearch extends Category
      */
     public function search($params)
     {
-        $query = Category::find()
-            ->with('parent')
+        $query = Product::find()
+            ->andWhere(['=', 'deleted_at', 0])
             ->groupBy('id');
 
         // add conditions that should always apply here
@@ -55,6 +53,9 @@ class CategorySearch extends Category
                     'id' => SORT_DESC,
                 ],
             ],
+            'pagination' => [
+                'pageSize' => Yii::$app->params['tablePageSize'],
+            ],
         ]);
 
         $this->load($params);
@@ -65,12 +66,12 @@ class CategorySearch extends Category
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['parent' => $this->parent]);
         $query->andFilterWhere(['like', 'slug', $this->slug]);
+        $query->andFilterWhere(['status' => $this->status]);
 
         // Translate
-        $query = Category::leftJoinTranslate($query);
-        $query = Category::fieldFilterTranslate($query, 'title', $this->title);
+        $query = Product::leftJoinTranslate($query);
+        $query = Product::fieldFilterTranslate($query, 'title', $this->title);
 
         return $dataProvider;
     }

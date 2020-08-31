@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\models\search;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
@@ -43,7 +43,7 @@ class UserSearch extends User
     {
         $query = User::find();
         $query->where(['role_group' => User::GROUP_FRONTEND]);
-        $query->andWhere(['!=', 'status', User::STATUS_DELETED]);
+        $query->andWhere(['=', 'deleted_at', 0]);
 
         // add conditions that should always apply here
 
@@ -51,6 +51,9 @@ class UserSearch extends User
             'query' => $query,
             'sort' => [
                 'defaultOrder' => ['created_at' => SORT_DESC],
+            ],
+            'pagination' => [
+                'pageSize' => Yii::$app->params['tablePageSize'],
             ],
         ]);
 

@@ -75,7 +75,7 @@
 
                 function uploadHandler(file) {
                     var ext = file.name.split('.').pop().toLowerCase(),
-                    extError = Exts.indexOf(ext) == -1;
+                        extError = Exts.indexOf(ext) == -1;
                     if (extError) {
                         editor.windowManager.alert('Only files with these extensions are allowed: ' + Exts.join(', '));
                         return;
@@ -124,24 +124,24 @@
                     win.close();
                 }
                 function insertHandler() {
-                    var selected = $(win.getEl()).find('.file-thumb.selected');
+                    var selected = $(win.getEl()).find('.media-image.selected .media-thumbnail');
                     if (selected.length) {
                         var imgs = '';
                         $(selected).each(function(key, val) {
-                            imgs += '<img src="' + $(val).attr('data-url') + '"/>';
+                            imgs += '<img src="' + $(val).attr('data-path') + '"/>';
                         });
                         editor.insertContent(imgs);
                     }
                     win.close();
                 }
                 function deleteHandler() {
-                    var selected = $(win.getEl()).find('.file-thumb.selected');
+                    var selected = $(win.getEl()).find('.media-image.selected .media-thumbnail');
                     if (selected.length) {
                         editor.windowManager.confirm('Are you sure you want to delete this item?', function(res) {
                             if (res) {
                                 var paths = [];
                                 $(selected).each(function(key, val) {
-                                    paths.push($(val).attr('data-url'));
+                                    paths.push($(val).attr('data-path'));
                                 });
                                 $.ajax({
                                     url: params.deleteUrl,
@@ -161,7 +161,7 @@
                     }
                 }
                 function winOpenHander() {
-                    var width = Math.min(window.innerWidth - 40, 800),
+                    var width = Math.min(window.innerWidth - 40, 860),
                         height = Math.min(window.innerHeight - 120, 500);
                     editor.focus(false);
 
@@ -169,7 +169,7 @@
                         title: 'File List',
                         body: [{
                             type: 'container',
-                            html: '<div class="filemanager-wrap" style="height: ' + (height - 40) + 'px;"></div>',
+                            html: '<div class="file-manager-wrap" id="file-manager-wrap" style="height: ' + (height - 40) + 'px;"></div>',
                         }],
                         buttons: [
                             {text: 'Confirm', subtype: 'primary', onclick: insertHandler},
@@ -184,11 +184,11 @@
                     });
 
                     var winEl = $(win.getEl());
-                    winEl.on('click', '.file-thumb', function() {
+                    winEl.on('click', '.media-image', function() {
                         $(this).toggleClass('selected');
                     });
-                    winEl.on('click', '.folder-icon', function() {
-                        params.managerFolder = $(this).attr('data-folder');
+                    winEl.on('click', '.media-folder .media-thumbnail', function() {
+                        params.managerFolder = $(this).attr('data-path');
                         loadFilesHtml();
                     });
                     winEl.on('click', '.pagination a', function(e) {
@@ -203,7 +203,7 @@
                 }
                 function loadFilesHtml() {
                     $.get(params.managerUrl, {page: params.managerPage, folder: params.managerFolder}, function(data) {
-                        $(win.getEl()).find('.filemanager-wrap').html(data);
+                        $(win.getEl()).find('#file-manager-wrap').html(data);
                     });
                 }
 
@@ -235,4 +235,3 @@
         return options;
     }
 }());
-

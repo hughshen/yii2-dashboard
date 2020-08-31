@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\User;
-use backend\models\search\UserSearch;
+use backend\models\UserSearch;
 
 /**
  * UserController implements the CRUD actions for User model.

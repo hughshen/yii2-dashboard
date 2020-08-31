@@ -1,7 +1,7 @@
 <?php
 
-use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 
@@ -10,22 +10,23 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tag-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(Yii::t('app', 'Create Tag'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-<?php Pjax::begin(); ?>    <?= GridView::widget([
+
+    <?php Pjax::begin(); ?>
+    <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             // 'title',
             [
                 'attribute' => 'title',
-                'value' => function($model) {
+                'value' => function ($model) {
                     return $model->translatedField('title', $model->title);
                 }
             ],
@@ -35,12 +36,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'status',
             [
                 'attribute' => 'created_at',
-                'value' => function($model) {
+                'value' => function ($model) {
                     return date('Y-m-d H:i:s', $model->created_at);
                 }
             ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'backend\widgets\ActionColumn'],
         ],
     ]); ?>
-<?php Pjax::end(); ?></div>
+    <?php Pjax::end(); ?>
+</div>

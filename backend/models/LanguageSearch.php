@@ -1,16 +1,16 @@
 <?php
 
-namespace backend\models\search;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\User;
+use common\models\Language;
 
 /**
- * ManagerSearch represents the model behind the search form about `common\models\User`.
+ * LanguageSearch represents the model behind the search form about `common\models\Language`.
  */
-class ManagerSearch extends User
+class LanguageSearch extends Language
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class ManagerSearch extends User
     public function rules()
     {
         return [
-            [['status'], 'integer'],
-            [['username', 'email', 'role'], 'safe'],
+            [['id', 'is_default', 'sorting', 'status'], 'integer'],
+            [['title', 'code', 'locale'], 'safe'],
         ];
     }
 
@@ -41,16 +41,14 @@ class ManagerSearch extends User
      */
     public function search($params)
     {
-        $query = User::find();
-        $query->where(['role_group' => User::GROUP_BACKEND]);
-        $query->andWhere(['!=', 'status', User::STATUS_DELETED]);
+        $query = Language::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
-                'defaultOrder' => ['created_at' => SORT_DESC],
+                'defaultOrder' => ['sorting' => SORT_ASC],
             ],
         ]);
 
@@ -64,12 +62,15 @@ class ManagerSearch extends User
 
         // grid filtering conditions
         $query->andFilterWhere([
+            'id' => $this->id,
+            'is_default' => $this->is_default,
+            'sorting' => $this->sorting,
             'status' => $this->status,
         ]);
 
-        $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'role', $this->role]);
+        $query->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'code', $this->code])
+            ->andFilterWhere(['like', 'locale', $this->locale]);
 
         return $dataProvider;
     }

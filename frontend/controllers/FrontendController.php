@@ -1,15 +1,13 @@
 <?php
+
 namespace frontend\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
+use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
-
 use common\models\Config;
-use common\models\Page;
-use backend\modules\cms\models\Menu;
+use frontend\models\Menu;
 
 /**
  * Frontend controller
@@ -20,7 +18,9 @@ class FrontendController extends Controller
 
     public $menu = [];
     public $menus = [];
+
     public $pages = [];
+
     public $config = [];
 
     public $seo = [];
@@ -28,11 +28,10 @@ class FrontendController extends Controller
     public function init()
     {
         parent::init();
-
+        $this->initConfig();
         $this->initLanguage();
         $this->initMenus();
         $this->initPages();
-        $this->initConfig();
         $this->initSeo();
     }
 
@@ -58,39 +57,28 @@ class FrontendController extends Controller
         return [];
     }
 
-    protected function initLanguage()
-    {
-        $this->setSiteLanguage('frontendLanguage', 'frontendLanguageList');
-    }
-
     protected function initConfig()
     {
         $this->config = Config::allData();
     }
 
-    protected function initSeo()
+    protected function initLanguage()
     {
-        $this->seo['title'] = $this->configByName('site_title_' . Yii::$app->language);
-        $this->seo['keywords'] = $this->configByName('site_keywords_' . Yii::$app->language);
-        $this->seo['description'] = $this->configByName('site_description_' . Yii::$app->language);
-
-        // No index ?
-        if ((int)$this->configByName('site_noindex') === 1 && stripos(Yii::$app->request->getHostName(), $this->configByName('site_domain')) === false) {
-            $this->seo['robots'] = 'noindex, nofollow';
-        }
+        $this->setSiteLanguage('frontendLanguage', 'frontendLanguageList');
     }
 
-    protected function registerSeo()
+    protected function initSeo()
     {
-        foreach ($this->seo as $key => $val) {
-            if (!$val) continue;
-            if ($key === 'title') {
-                $this->getView()->title = $val;
-            } elseif (!is_numeric($key)) {
-                $this->getView()->registerMetaTag(['name' => $key, 'content' => $val]);
-            } else {
-                $this->getView()->registerMetaTag($val);
-            }
+        $this->seo['title'] = $this->configByName('site_title', true);
+        $this->seo['keywords'] = $this->configByName('site_keywords', true);
+        $this->seo['description'] = $this->configByName('site_description', true);
+
+        // No index?
+        if (
+            (int)$this->configByName('site_noindex') === 1 &&
+            stripos(Yii::$app->request->getHostName(), $this->configByName('site_domain')) === false
+        ) {
+            $this->seo['robots'] = 'noindex, nofollow';
         }
     }
 
@@ -110,20 +98,46 @@ class FrontendController extends Controller
 
     protected function initPages()
     {
-        
+
     }
 
     protected function getMenu($mid)
     {
-        return Menu::byId($mid);
+        $menu = Menu::byId($mid);
+        $menu = Menu::buildData($menu);
+
+        return $menu;
     }
 
-    public function configByName($name)
+    public function groupMenus($group)
     {
+        return Menu::groupList($group, $this->menus);
+    }
+
+    public function configByName($name, $translated = false)
+    {
+        if ($translated === true) {
+            $name .= '_' . Yii::$app->language;
+        }
+
         if (isset($this->config[$name])) {
             return $this->config[$name];
         } else {
             return null;
+        }
+    }
+
+    protected function registerSeo()
+    {
+        foreach ($this->seo as $key => $val) {
+            if (!$val) continue;
+            if ($key === 'title') {
+                $this->getView()->title = $val;
+            } elseif (!is_numeric($key)) {
+                $this->getView()->registerMetaTag(['name' => $key, 'content' => $val]);
+            } else {
+                $this->getView()->registerMetaTag($val);
+            }
         }
     }
 
@@ -168,13 +182,13 @@ class FrontendController extends Controller
     {
         if ((int)$length > 0) {
             $length = (int)$length;
-            
+
             if (function_exists('mb_strlen')) {
                 $l = mb_strlen($string, 'utf-8');
             } else {
                 $l = iconv_strlen($string, 'utf-8');
             }
-            
+
             if ($l > $length) {
                 if (function_exists('mb_substr')) {
                     $string = mb_substr($string, 0, $length);

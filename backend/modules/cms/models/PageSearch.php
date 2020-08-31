@@ -1,16 +1,15 @@
 <?php
 
-namespace backend\modules\cms\models\search;
+namespace backend\modules\cms\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\modules\cms\models\Post;
 
 /**
- * PostSearch represents the model behind the search form about `backend\modules\cms\models\Post`.
+ * PageSearch represents the model behind the search form about `backend\modules\cms\models\Page`.
  */
-class PostSearch extends Post
+class PageSearch extends Page
 {
     /**
      * @inheritdoc
@@ -40,9 +39,9 @@ class PostSearch extends Post
      */
     public function search($params)
     {
-        $query = Post::find()
-            ->andWhere(['type' => Post::typeName()])
-            ->andWhere(['!=', 'status', Post::STATUS_TRASH])
+        $query = Page::find()
+            ->andWhere(['type' => Page::typeName()])
+            ->andWhere(['=', 'deleted_at', 0])
             ->groupBy('id');
 
         // add conditions that should always apply here
@@ -54,6 +53,9 @@ class PostSearch extends Post
                     'sorting' => SORT_ASC,
                     'id' => SORT_DESC,
                 ],
+            ],
+            'pagination' => [
+                'pageSize' => Yii::$app->params['tablePageSize'],
             ],
         ]);
 
@@ -69,9 +71,9 @@ class PostSearch extends Post
         $query->andFilterWhere(['like', 'status', $this->status]);
 
         // Translate
-        $query = Post::leftJoinTranslate($query);
-        $query = Post::fieldFilterTranslate($query, 'title', $this->title);
-        $query = Post::fieldFilterTranslate($query, 'excerpt', $this->excerpt);
+        $query = Page::leftJoinTranslate($query);
+        $query = Page::fieldFilterTranslate($query, 'title', $this->title);
+        $query = Page::fieldFilterTranslate($query, 'excerpt', $this->excerpt);
 
         return $dataProvider;
     }

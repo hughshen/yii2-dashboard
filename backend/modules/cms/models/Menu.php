@@ -3,7 +3,6 @@
 namespace backend\modules\cms\models;
 
 use Yii;
-use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 
 class Menu extends Category
@@ -16,19 +15,9 @@ class Menu extends Category
         return 'menu';
     }
 
-    public function getParentMenu()
-    {
-        return $this->hasOne(static::className(), ['id' => 'parent'])->with(['translated'])->andOnCondition(['status' => 1, 'type' => static::typeName()]);
-    }
-
-    public function getFirstChild()
-    {
-        return $this->hasOne(self::className(), ['parent' => 'id'])->with(['translated'])->andOnCondition(['status' => 1, 'type' => static::typeName()])->orderBy('sorting ASC, created_at DESC');
-    }
-
     public function extraFields()
     {
-        $this->extractExtraData();        
+        $this->extractExtraData();
         $menuType = $this->getExtraValue('type');
         $promptText = '----';
         return [
@@ -112,7 +101,7 @@ class Menu extends Category
         ]);
 
         if (!is_array($files)) return [];
-        
+
         $templates = [];
         foreach ($files as $file) {
             $templates[] = basename($file, '.php');
@@ -164,100 +153,5 @@ class Menu extends Category
         }
 
         return $data;
-    }
-
-    public static function commonQuery($condition = [])
-    {
-        $query = self::find()
-            ->with(['translated', 'parentMenu', 'firstChild'])
-            ->where(['status' => 1, 'type' => static::typeName()])
-            ->andWhere($condition);
-
-        return $query;
-    }
-
-    public static function byId($id)
-    {
-        return self::commonQuery(['id' => $id])->asArray()->one();
-    }
-
-    public static function bySlug($slug)
-    {
-        return self::commonQuery(['slug' => $slug])->asArray()->one();
-    }
-
-    public static function buildData($data)
-    {
-        $selfBuild = ['parentMenu', 'firstChild'];
-        foreach ($selfBuild as $val) {
-            if (isset($data[$val])) {
-                $data[$val] = self::buildData($data[$val]);
-            }
-        }
-
-        $data = self::combineTranslatedData($data);
-        $data['menu_url'] = self::buildUrl($data);
-
-        return $data;
-    }
-
-    public static function frontendList()
-    {
-        $data = self::commonQuery()->orderBy('parent ASC, sorting ASC, created_at DESC')->asArray()->all();
-
-        $newData = [];
-        foreach ($data as $val) {
-            if ($val['parent'] == 0) {
-                if ($val['slug']) {
-                    $newData[$val['slug']] = $val['id'];
-                }
-            } else {
-                $newData[$val['parent']][] = self::buildData($val);
-            }
-        }
-
-        return $newData;
-    }
-
-    public static function groupList($group, $menus = null)
-    {
-        if ($menus === null) {
-            $menus = self::frontendList();
-        }
-
-        $id = isset($menus[$group]) ? $menus[$group] : null;
-
-        if ($id && isset($menus[$id])) {
-            return $menus[$id];
-        } else {
-            return [];
-        }
-    }
-
-    public static function buildUrl($menu)
-    {
-        if (!isset($menu['extra_data'])) return null;
-
-        $extra = json_decode($menu['extra_data'], true);
-
-        $url = '';
-
-        if (isset($extra['route']) && !empty($extra['route'])) {
-            $url = '/' . ltrim($extra['route'], '/');
-            $url = [$url, 'mid' => $menu['id']];
-        } elseif (isset($extra['link']) && !empty($extra['link'])) {
-            $url = $extra['link'];
-        } elseif (isset($extra['type']) && isset($extra['type_id']) && !empty($extra['type']) && !empty($extra['type_id'])) {
-            // $url = ['/site/' . $extra['type'], $extra['type'] => $extra['type_id']];
-            $url = ['/site/page', 'mid' => $menu['id']];
-        } else {
-            $url = ['/site/page', 'mid' => $menu['id']];
-        }
-
-        if ($url) {
-            return Url::to($url, true);
-        } else {
-            return null;
-        }
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
-namespace backend\modules\cms\models\search;
+namespace backend\modules\cms\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\modules\cms\models\Tag;
 
 /**
  * TagSearch represents the model behind the search form about `backend\modules\cms\models\Tag`.
@@ -42,6 +41,7 @@ class TagSearch extends Tag
     {
         $query = Tag::find()
             ->andWhere(['type' => Tag::typeName()])
+            ->andWhere(['=', 'deleted_at', 0])
             ->groupBy('id');
 
         // add conditions that should always apply here
@@ -53,6 +53,9 @@ class TagSearch extends Tag
                     'sorting' => SORT_ASC,
                     'id' => SORT_DESC,
                 ],
+            ],
+            'pagination' => [
+                'pageSize' => Yii::$app->params['tablePageSize'],
             ],
         ]);
 

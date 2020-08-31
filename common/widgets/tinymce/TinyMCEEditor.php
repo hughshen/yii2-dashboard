@@ -55,8 +55,8 @@ class TinyMCEEditor extends \yii\widgets\InputWidget
         $view = $this->getView();
         TinyMCEAsset::register($view);
 
-        $allowExtensions = \common\models\Media::ALLOW_EXTENSIONS;
-        $allowMimeTypes = implode(',', \common\models\Media::ALLOW_MIME_TYPES);
+        $allowExtensions = \common\components\Media::ALLOW_EXTENSIONS;
+        $allowMimeTypes = implode(',', \common\components\Media::ALLOW_MIME_TYPES);
 
         $view->registerJs('
         initTinyMCE({

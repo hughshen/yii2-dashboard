@@ -4,7 +4,7 @@ namespace backend\modules\shop\controllers;
 
 use Yii;
 use backend\modules\shop\models\Product;
-use backend\modules\shop\models\search\ProductSearch;
+use backend\modules\shop\models\ProductSearch;
 
 /**
  * ProductController implements the CRUD actions for Product model.

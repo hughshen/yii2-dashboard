@@ -4,7 +4,7 @@ namespace backend\modules\cms\controllers;
 
 use Yii;
 use backend\modules\cms\models\Post;
-use backend\modules\cms\models\search\PostSearch;
+use backend\modules\cms\models\PostSearch;
 
 /**
  * PostController implements the CRUD actions for Post model.

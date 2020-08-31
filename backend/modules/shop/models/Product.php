@@ -72,8 +72,7 @@ class Product extends \common\models\shop\Product
         $this->setSlug($this->title);
 
         if (!$this->validate()) {
-            Yii::$app->session->setFlash('error', implode('<br>', (array)$this->getFirstErrors()));
-            return false;
+            throw new \yii\base\Exception(implode('<br>', (array)$this->getFirstErrors()));
         };
 
         $transaction = Yii::$app->db->beginTransaction();
@@ -87,27 +86,23 @@ class Product extends \common\models\shop\Product
 
             $transaction->commit();
 
-            Yii::$app->session->setFlash('success', 'Updated successfully.');
-
             return $this;
         } catch (\Exception $e) {
             $transaction->rollBack();
             throw $e;
         }
-
-        return false;
     }
 
     /**
      * Delete model
      */
-    public function deleteModel()
+    public function deleteModel($fake = true)
     {
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            if ($this->hasTrash()) {
-                $this->moveToTrash();
-                $this->save();
+            if ($fake) {
+                $this->deleted_at = time();
+                $this->update(false);
             } else {
                 $this->unlinkAll('categories', true);
                 $this->deleteAllTranslate();
@@ -115,8 +110,6 @@ class Product extends \common\models\shop\Product
             }
 
             $transaction->commit();
-
-            Yii::$app->session->setFlash('success', 'Deleted successfully.');
         } catch (\Exception $e) {
             throw $e;
         }

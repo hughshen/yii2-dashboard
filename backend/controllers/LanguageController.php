@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\Language;
-use backend\models\search\LanguageSearch;
+use backend\models\Language;
+use backend\models\LanguageSearch;
 
 /**
  * LanguageController implements the CRUD actions for Language model.

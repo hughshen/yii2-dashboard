@@ -1,16 +1,15 @@
 <?php
 
-namespace backend\modules\shop\models\search;
+namespace backend\modules\cms\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\modules\shop\models\Product;
 
 /**
- * ProductSearch represents the model behind the search form of `backend\modules\shop\models\Product`.
+ * PostSearch represents the model behind the search form about `backend\modules\cms\models\Post`.
  */
-class ProductSearch extends Product
+class PostSearch extends Post
 {
     /**
      * @inheritdoc
@@ -18,7 +17,7 @@ class ProductSearch extends Product
     public function rules()
     {
         return [
-            [['slug', 'title', 'status'], 'string'],
+            [['slug', 'title', 'excerpt', 'status'], 'string'],
         ];
     }
 
@@ -40,7 +39,9 @@ class ProductSearch extends Product
      */
     public function search($params)
     {
-        $query = Product::find()
+        $query = Post::find()
+            ->andWhere(['type' => Post::typeName()])
+            ->andWhere(['=', 'deleted_at', 0])
             ->groupBy('id');
 
         // add conditions that should always apply here
@@ -53,6 +54,9 @@ class ProductSearch extends Product
                     'id' => SORT_DESC,
                 ],
             ],
+            'pagination' => [
+                'pageSize' => Yii::$app->params['tablePageSize'],
+            ],
         ]);
 
         $this->load($params);
@@ -64,11 +68,12 @@ class ProductSearch extends Product
         }
 
         $query->andFilterWhere(['like', 'slug', $this->slug]);
-        $query->andFilterWhere(['status' => $this->status]);
+        $query->andFilterWhere(['like', 'status', $this->status]);
 
         // Translate
-        $query = Product::leftJoinTranslate($query);
-        $query = Product::fieldFilterTranslate($query, 'title', $this->title);
+        $query = Post::leftJoinTranslate($query);
+        $query = Post::fieldFilterTranslate($query, 'title', $this->title);
+        $query = Post::fieldFilterTranslate($query, 'excerpt', $this->excerpt);
 
         return $dataProvider;
     }

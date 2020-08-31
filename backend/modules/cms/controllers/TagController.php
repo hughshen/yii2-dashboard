@@ -4,7 +4,7 @@ namespace backend\modules\cms\controllers;
 
 use Yii;
 use backend\modules\cms\models\Tag;
-use backend\modules\cms\models\search\TagSearch;
+use backend\modules\cms\models\TagSearch;
 
 /**
  * TagController implements the CRUD actions for Tag model.

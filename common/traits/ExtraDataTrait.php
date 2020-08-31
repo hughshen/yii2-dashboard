@@ -60,7 +60,7 @@ trait ExtraDataTrait
         try {
             $this->extraData = json_decode($this->extra_data, true);
         } catch (\Exception $e) {
-            
+
         }
     }
 
@@ -70,15 +70,18 @@ trait ExtraDataTrait
     public function defaultExtraFields()
     {
         $this->extractExtraData();
-        return [
-            [
-                'fieldName' => 'image',
-                'inputLabel' => Yii::t('app', 'Image'),
-                'inputType' => 'image',
-                'valueData' => $this->extraData,
-                'defaultValue' => $this->getExtraValue('image'),
-            ],
+
+        $defaultExtraFields = [
+            // [
+            //     'fieldName' => 'image',
+            //     'inputLabel' => Yii::t('app', 'Image'),
+            //     'inputType' => 'image',
+            //     'valueData' => $this->extraData,
+            //     'defaultValue' => $this->getExtraValue('image'),
+            // ],
         ];
+
+        return $defaultExtraFields;
     }
 
     /**

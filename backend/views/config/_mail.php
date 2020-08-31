@@ -9,7 +9,7 @@ use common\widgets\ExtraFieldInput;
     <label class="control-label"><?= Yii::t('app', 'Mailer Test') ?></label>
     <div style="position: relative;">
         <input type="text" id="smtp-test-input" class="form-control" style="padding-left: 45px;">
-        <span class="btn btn-success" id="smtp-test-toggle" style="position: absolute; bottom: 0; left: 0;">
+        <span class="btn btn-success" id="smtp-test-toggle" style="position: absolute; bottom: 0; left: 0; margin-bottom: 0;">
             <i class="glyphicon glyphicon-send"></i>
         </span>
     </div>

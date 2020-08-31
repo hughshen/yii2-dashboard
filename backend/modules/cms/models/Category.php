@@ -18,7 +18,7 @@ class Category extends \common\models\cms\Category
             [['title'], 'required'],
             [['parent', 'sorting', 'created_at', 'updated_at'], 'integer'],
             [['type'], 'string', 'max' => 32],
-            [['slug', 'title'], 'string', 'max' => 255],
+            [['slug', 'title', 'image'], 'string', 'max' => 255],
             [['description', 'extra_data'], 'string'],
             ['type', 'default', 'value' => static::typeName()],
             [['parent', 'sorting'], 'default', 'value' => 0],
@@ -41,6 +41,7 @@ class Category extends \common\models\cms\Category
             'title' => Yii::t('app', 'Title'),
             'description' => Yii::t('app', 'Description'),
             'type' => Yii::t('app', 'Type'),
+            'image' => Yii::t('app', 'Image'),
             'extra_data' => Yii::t('app', 'Extra Data'),
             'sorting' => Yii::t('app', 'Sorting'),
             'status' => Yii::t('app', 'Status'),
@@ -66,8 +67,7 @@ class Category extends \common\models\cms\Category
         $this->setSlug($this->title);
 
         if (!$this->validate()) {
-            Yii::$app->session->setFlash('error', implode('<br>', (array)$this->getFirstErrors()));
-            return false;
+            throw new \yii\base\Exception(implode('<br>', (array)$this->getFirstErrors()));
         };
 
         $transaction = Yii::$app->db->beginTransaction();
@@ -80,35 +80,37 @@ class Category extends \common\models\cms\Category
 
             $transaction->commit();
 
-            Yii::$app->session->setFlash('success', 'Updated successfully.');
-
             return $this;
         } catch (\Exception $e) {
             $transaction->rollBack();
             throw $e;
         }
-
-        return false;
     }
 
     /**
      * Delete model
      */
-    public function deleteModel()
+    public function deleteModel($fake = true)
     {
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $this->unlinkAll('posts', true);
-            $this->deleteAllTranslate();
-            $this->delete();
+            if ($fake) {
+                $this->deleted_at = time();
+                $this->update(false);
+            } else {
+                $this->updateChildren();
+                $this->unlinkAll('posts', true);
+                $this->deleteAllTranslate();
+                $this->delete();
+            }
 
             $transaction->commit();
-
-            Yii::$app->session->setFlash('success', 'Deleted successfully.');
         } catch (\Exception $e) {
+            $transaction->rollBack();
             throw $e;
         }
     }
+
 
     /**
      * Update children when delete record
@@ -126,7 +128,7 @@ class Category extends \common\models\cms\Category
     public static function categoryList($type = null)
     {
         if ($type === null) $type = static::typeName();
-        
+
         $data = self::find()
             ->with(['translated'])
             ->where(['type' => $type])

@@ -14,12 +14,19 @@ use yii\bootstrap\Tabs;
     echo Tabs::widget([
         'items' => [
             [
+                'label' => Yii::t('app', 'Translate'),
+                'content' => $this->render('form/_tran', [
+                    'form' => $form,
+                    'model' => $model,
+                ]),
+                'active' => true,
+            ],
+            [
                 'label' => Yii::t('app', 'Base'),
                 'content' => $this->render('form/_base', [
                     'form' => $form,
                     'model' => $model,
                 ]),
-                'active' => true,
             ],
             [
                 'label' => Yii::t('app', 'Categories'),

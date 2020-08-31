@@ -13,7 +13,6 @@ class User extends ActiveRecord implements IdentityInterface
     use \common\traits\ExtraDataTrait;
     use \common\traits\CrudModelTrait;
 
-    const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
     const STATUS_INACTIVE = 20;
     const ROLE_MANAGER = 'manager';
@@ -61,13 +60,13 @@ class User extends ActiveRecord implements IdentityInterface
             ['email', 'string', 'max' => 255],
             ['email', 'unique'],
 
-            ['role', 'default' , 'value' => self::ROLE_USER],
+            ['role', 'default', 'value' => self::ROLE_USER],
             ['role_group', 'default', 'value' => self::GROUP_FRONTEND],
             [['role', 'role_group'], 'string', 'max' => 32],
 
             ['status', 'integer'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_INACTIVE, self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['status', 'in', 'range' => [self::STATUS_INACTIVE, self::STATUS_ACTIVE]],
 
             [['created_at', 'updated_at', 'deleted_at'], 'integer'],
             [['created_at', 'updated_at'], 'default', 'value' => time()],
@@ -101,6 +100,9 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    /**
+     * Create or update user
+     */
     public function saveModel()
     {
         if ($this->isNewRecord) {
@@ -108,35 +110,37 @@ class User extends ActiveRecord implements IdentityInterface
         } else {
             $this->updated_at = time();
         }
-        
+
         if ($this->password) {
             $this->setPassword($this->password);
         }
 
-        if ($this->save()) {
-            Yii::$app->session->setFlash('success', Yii::t('app', 'Successfully'));
-            return true;
+        if (!$this->save()) {
+            throw new \yii\base\Exception(Yii::t('app', 'Save user failed'));
         }
 
-        Yii::$app->session->setFlash('error', Yii::t('app', 'Failed'));
-        return false;
+        return true;
     }
 
-    public function deleteModel()
+    /**
+     * Delete user
+     */
+    public function deleteModel($fake = true)
     {
         $transaction = Yii::$app->db->beginTransaction();
         try {
-            $randomString = Yii::$app->security->generateRandomString();
-            $this->username .= "_{$randomString}";
-            $this->email .= "_{$randomString}";
+            if ($fake) {
+                $current = (string)microtime(true);
+                $this->email .= "_{$current}";
+                $this->username .= "_{$current}";
+                $this->deleted_at = time();
 
-            $this->status = self::STATUS_DELETED;
-            $this->deleted_at = time();
-
-            $this->save(false);
+                $this->update(false);
+            } else {
+                $this->delete();
+            }
 
             $transaction->commit();
-            Yii::$app->session->setFlash('success', Yii::t('app', 'Deleted successfully.'));
         } catch (\Exception $e) {
             throw $e;
         }
@@ -171,6 +175,7 @@ class User extends ActiveRecord implements IdentityInterface
             'status' => self::STATUS_ACTIVE,
             'role' => self::ROLE_USER,
             'role_group' => self::GROUP_FRONTEND,
+            'deleted_at' => 0,
         ]);
     }
 
@@ -187,6 +192,7 @@ class User extends ActiveRecord implements IdentityInterface
             'status' => self::STATUS_ACTIVE,
             'role' => self::ROLE_MANAGER,
             'role_group' => self::GROUP_BACKEND,
+            'deleted_at' => 0,
         ]);
     }
 
@@ -220,7 +226,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
