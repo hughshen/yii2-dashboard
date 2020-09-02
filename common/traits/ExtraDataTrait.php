@@ -64,6 +64,30 @@ trait ExtraDataTrait
         }
     }
 
+    public static function combineExtraData($data)
+    {
+        if (!is_array($data) || !$data) return $data;
+
+        // Single
+        $isSingle = isset($data['id']);
+        $data = $isSingle ? [$data] : $data;
+
+        $newData = [];
+        foreach ($data as $key => $val) {
+            $extra = @json_decode($val['extra_data'], true);
+            unset($val['extra_data']);
+            if (is_array($extra)) {
+                foreach ($extra as $k => $v) {
+                    $k = 'extra_' . $k;
+                    $val[$k] = $v;
+                }
+            }
+            $newData[] = $val;
+        }
+
+        return $isSingle ? $newData[0] : $newData;
+    }
+
     /**
      * Default extra fields
      */

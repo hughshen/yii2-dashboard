@@ -133,11 +133,8 @@ trait TranslateTrait
         if (!is_array($data) || !$data) return $data;
 
         // Single
-        $isSingle = !isset($data['0']);
-
-        if ($isSingle) {
-            $data = [$data];
-        }
+        $isSingle = isset($data['id']);
+        $data = $isSingle ? [$data] : $data;
 
         $newData = [];
         foreach ($data as $key => $val) {
@@ -150,10 +147,6 @@ trait TranslateTrait
             $newData[] = $val;
         }
 
-        if ($isSingle) {
-            return $newData[0];
-        } else {
-            return $newData;
-        }
+        return $isSingle ? $newData[0] : $newData;
     }
 }
