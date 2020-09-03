@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use common\widgets\TranslateInput;
+use backend\widgets\TranslateInput;
 
 ?>
 <?= TranslateInput::widget([

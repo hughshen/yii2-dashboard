@@ -3,11 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model backend\models\LanguageSearch */
-/* @var $form yii\widgets\ActiveForm */
 ?>
-
 <div class="language-search">
 
     <?php $form = ActiveForm::begin([

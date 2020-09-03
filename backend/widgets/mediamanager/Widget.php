@@ -1,6 +1,6 @@
 <?php
 
-namespace common\widgets\mediamanager;
+namespace backend\widgets\mediamanager;
 
 use Yii;
 use yii\bootstrap\Modal;

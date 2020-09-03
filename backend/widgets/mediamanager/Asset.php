@@ -1,14 +1,12 @@
 <?php
 
-namespace common\widgets\tinymce;
+namespace backend\widgets\mediamanager;
 
 use yii\web\AssetBundle;
 
-class TinyMCEAsset extends AssetBundle
+class Asset extends AssetBundle
 {
-    public $css = [
-        'css/custom.css',
-    ];
+    public $css = [];
     public $js = [
         'js/custom.js',
     ];
@@ -16,7 +14,8 @@ class TinyMCEAsset extends AssetBundle
         'forceCopy' => YII_DEBUG ? true : false,
     ];
     public $depends = [
-        'common\widgets\tinymce\TinyMCEPluginAsset',
+        'yii\web\JqueryAsset',
+        'yii\bootstrap\BootstrapAsset',
     ];
 
     public function init()

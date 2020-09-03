@@ -1,5 +1,5 @@
 <?php
-namespace common\widgets;
+namespace backend\widgets;
 
 use Yii;
 use yii\helpers\Url;
@@ -75,7 +75,7 @@ class TranslateInput extends \yii\bootstrap\Widget
                     case 'editor':
                         $content .= '<div class="form-group field-' . $inputId . '">
                         ' . Html::activeLabel($this->model, $attr, ['for' => $inputId, 'class' => 'control-label']) . '
-                        ' . \common\widgets\tinymce\TinyMCEEditor::widget([
+                        ' . \backend\widgets\tinymce\TinyMCEEditor::widget([
                                 'name' => $inputName,
                                 'value' => $inputValue,
                                 'id' => $inputId,

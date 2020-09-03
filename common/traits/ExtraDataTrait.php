@@ -129,9 +129,15 @@ trait ExtraDataTrait
      */
     public function renderExtraTabContent()
     {
-        $content = '<p></p>';
+        if (!isset(Yii::$app->extraFieldInput)) {
+            throw new \yii\base\InvalidConfigException();
+        }
+
+        $inputClass = '\\' . get_class(Yii::$app->extraFieldInput);
+
+        $content = '';
         foreach ((array)$this->allExtraFields() as $extra) {
-            $content .= \common\widgets\ExtraFieldInput::widget(['options' => $extra]);
+            $content .= $inputClass::widget(['options' => $extra]);
         }
         return $content;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace common\widgets\tinymce;
+namespace backend\widgets\tinymce;
 
 use Yii;
 use yii\helpers\Url;

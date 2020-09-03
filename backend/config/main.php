@@ -52,6 +52,9 @@ return [
             ],
         ],
         */
+        'extraFieldInput' => [
+            'class' => 'backend\widgets\ExtraFieldInput',
+        ],
     ],
     'params' => $params,
 ];

@@ -6,7 +6,6 @@ use yii\widgets\ActiveForm;
 $this->title = Yii::t('app', 'Change password');
 
 ?>
-
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>

@@ -5,7 +5,6 @@ use yii\widgets\ActiveForm;
 use yii\bootstrap\Tabs;
 
 ?>
-
 <div class="product-form">
 
     <?php $form = ActiveForm::begin(); ?>

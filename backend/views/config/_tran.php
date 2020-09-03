@@ -3,7 +3,6 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\bootstrap\Tabs;
-use common\models\Config;
 
 $langs = Yii::$app->session->get('backendLanguageList');
 

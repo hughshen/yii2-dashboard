@@ -7,6 +7,7 @@ use yii\bootstrap\Tabs;
 
 $this->title = Yii::t('app', 'Config');
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="config-index">
 

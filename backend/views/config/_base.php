@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use common\widgets\ExtraFieldInput;
+use backend\widgets\ExtraFieldInput;
 
 ?>
 <?= ExtraFieldInput::widget([

@@ -6,7 +6,7 @@ use backend\modules\shop\models\Category;
 ?>
 <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
 
-<?= $form->field($model, 'image')->widget(\common\widgets\mediamanager\Widget::className()) ?>
+<?= $form->field($model, 'image')->widget(\backend\widgets\mediamanager\Widget::className()) ?>
 
 <?= $form->field($model, 'sorting')->textInput() ?>
 

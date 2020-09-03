@@ -6,7 +6,6 @@ use yii\widgets\ActiveForm;
 use yii\bootstrap\Tabs;
 
 ?>
-
 <div class="menu-form">
 
     <?php $form = ActiveForm::begin(); ?>

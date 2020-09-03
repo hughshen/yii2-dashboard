@@ -3,7 +3,7 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
-use common\widgets\ExtraFieldInput;
+use backend\widgets\ExtraFieldInput;
 use backend\modules\shop\models\Category;
 
 $categoryIds = ArrayHelper::getColumn($model->getCategories()->asArray()->all(), 'id');
