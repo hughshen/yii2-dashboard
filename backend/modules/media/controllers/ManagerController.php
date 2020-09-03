@@ -1,15 +1,14 @@
 <?php
 
-namespace backend\controllers;
+namespace backend\modules\media\controllers;
 
 use Yii;
-use yii\web\Response;
 use yii\web\UploadedFile;
 use yii\data\Pagination;
-use common\components\Media;
-use backend\models\UploadForm;
+use backend\modules\media\components\Media;
+use backend\modules\media\models\UploadForm;
 
-class MediaController extends BackendController
+class ManagerController extends \backend\controllers\BackendController
 {
     public function actionIndex()
     {
@@ -80,67 +79,16 @@ class MediaController extends BackendController
         return $this->redirect(['index', 'folder' => $folder]);
     }
 
-    public function actionManagerList()
+    public function actionPopup()
     {
         list($list, $listCount) = Media::getFileList(Yii::$app->request->get('folder'));
 
         $pages = new Pagination(['totalCount' => $listCount, 'defaultPageSize' => 12]);
         $data = Media::getFileData($list, $pages->offset, $pages->limit);
 
-        return $this->renderPartial('manager', [
+        return $this->renderPartial('popup', [
             'list' => $data,
             'pages' => $pages,
         ]);
-    }
-
-    public function actionJsonUpload()
-    {
-        Yii::$app->response->getHeaders()->set('Vary', 'Accept');
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $json = [];
-        $json['status'] = 0;
-        $json['msg'] = Yii::t('app', 'Fail!');
-
-        $image = Yii::$app->request->post('image');
-        $filename = Yii::$app->request->post('filename');
-
-        try {
-            $res = Media::saveByData($image, $filename);
-            if (is_string($res)) {
-                $json['status'] = 1;
-                $json['path'] = $res;
-                $json['msg'] = Yii::t('app', 'Upload success');
-            }
-        } catch (\Exception $e) {
-            $json['msg'] = $e->getMessage();
-        }
-
-        return $json;
-    }
-
-    public function actionJsonDelete()
-    {
-        Yii::$app->response->getHeaders()->set('Vary', 'Accept');
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $json = [];
-        $json['status'] = 0;
-        $json['msg'] = Yii::t('app', 'Error');
-
-        $paths = Yii::$app->request->post('paths');
-        $paths = is_array($paths) ? $paths : (is_string($paths) ? [$paths] : []);
-
-        if (!empty($paths)) {
-            foreach ($paths as $path) {
-                Media::deleteFile($path);
-            }
-            $json['status'] = 1;
-            $json['msg'] = Yii::t('app', 'Delete success');
-        } else {
-            $json['msg'] = Yii::t('app', 'Empty files');
-        }
-
-        return $json;
     }
 }

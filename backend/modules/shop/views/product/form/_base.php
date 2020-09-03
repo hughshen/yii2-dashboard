@@ -13,7 +13,7 @@ use backend\modules\shop\models\Product;
 
 <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
 
-<?= $form->field($model, 'image')->widget(\backend\widgets\mediamanager\Widget::className()) ?>
+<?= $form->field($model, 'image')->widget(\backend\modules\media\widgets\TextInput::className()) ?>
 
 <?= $form->field($model, 'view_count')->textInput() ?>
 

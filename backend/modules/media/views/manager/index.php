@@ -4,6 +4,9 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\bootstrap\Modal;
 use yii\widgets\LinkPager;
+use backend\modules\media\widgets\MediaAsset;
+
+MediaAsset::register($this);
 
 $this->title = Yii::t('app', 'Media');
 $this->params['breadcrumbs'][] = $this->title;

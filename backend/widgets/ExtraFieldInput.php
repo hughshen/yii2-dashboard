@@ -47,7 +47,7 @@ class ExtraFieldInput extends \yii\bootstrap\Widget
                 $html .= Html::textarea($inputName, $inputValue, ['class' => 'form-control', 'id' => $inputId, 'rows' => 4]);
                 break;
             case 'image':
-                $html .= \backend\widgets\mediamanager\Widget::widget(['name' => $inputName, 'value' => $inputValue, 'id' => $inputId]);
+                $html .= \backend\modules\media\widgets\TextInput::widget(['name' => $inputName, 'value' => $inputValue, 'id' => $inputId]);
                 break;
             case 'dropdown':
                 $html .= Html::dropDownList($inputName, $inputValue, $options['valueList'], ['class' => 'form-control', 'id' => $inputId, 'prompt' => $options['promptText']]);

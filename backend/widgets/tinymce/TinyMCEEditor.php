@@ -7,6 +7,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\ArrayHelper;
+use backend\modules\media\components\Media;
 
 class TinyMCEEditor extends \yii\widgets\InputWidget
 {
@@ -27,13 +28,13 @@ class TinyMCEEditor extends \yii\widgets\InputWidget
         $this->value = $this->hasModel() ? $this->model->{$this->attribute} : $this->value;
 
         if (!$this->fileUploadUrl) {
-            $this->fileUploadUrl = Url::to(['/media/json-upload']);
+            $this->fileUploadUrl = Url::to(['/media/api/upload']);
         }
         if (!$this->fileDeleteUrl) {
-            $this->fileDeleteUrl = Url::to(['/media/json-delete']);
+            $this->fileDeleteUrl = Url::to(['/media/api/delete']);
         }
         if (!$this->fileManagerUrl) {
-            $this->fileManagerUrl = Url::to(['/media/manager-list']);
+            $this->fileManagerUrl = Url::to(['/media/manager/popup']);
         }
     }
 
@@ -55,8 +56,8 @@ class TinyMCEEditor extends \yii\widgets\InputWidget
         $view = $this->getView();
         TinyMCEAsset::register($view);
 
-        $allowExtensions = \common\components\Media::ALLOW_EXTENSIONS;
-        $allowMimeTypes = implode(',', \common\components\Media::ALLOW_MIME_TYPES);
+        $allowExtensions = Media::ALLOW_EXTENSIONS;
+        $allowMimeTypes = implode(',', Media::ALLOW_MIME_TYPES);
 
         $view->registerJs('
         initTinyMCE({

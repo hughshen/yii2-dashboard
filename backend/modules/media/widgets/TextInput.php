@@ -1,14 +1,14 @@
 <?php
 
-namespace backend\widgets\mediamanager;
+namespace backend\modules\media\widgets;
 
 use Yii;
-use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use yii\helpers\Html;
+use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
 
-class Widget extends \yii\bootstrap\InputWidget
+class TextInput extends \yii\bootstrap\InputWidget
 {
     public $id;
 
@@ -51,13 +51,13 @@ class Widget extends \yii\bootstrap\InputWidget
     protected function registerClientScript()
     {
         $view = $this->getView();
-        Asset::register($view);
+        MediaAsset::register($view);
 
         $view->registerJs('
         initMediaManager({
             target: "#' . $this->id . '",
             targetView: "#' . $this->id . '-view",
-            managerUrl: "' . Url::to(['/media/manager-list']) . '",
+            managerUrl: "' . Url::to(['/media/manager/popup']) . '",
         });
         ', \yii\web\View::POS_END);
     }

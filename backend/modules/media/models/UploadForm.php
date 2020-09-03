@@ -1,10 +1,10 @@
 <?php
 
-namespace backend\models;
+namespace backend\modules\media\models;
 
 use Yii;
 use yii\base\Model;
-use common\components\Media;
+use backend\modules\media\components\Media;
 
 class UploadForm extends Model
 {

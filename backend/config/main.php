@@ -18,6 +18,9 @@ return [
         'shop' => [
             'class' => 'backend\modules\shop\Module',
         ],
+        'media' => [
+            'class' => 'backend\modules\media\Module',
+        ],
     ],
     'components' => [
         'request' => [

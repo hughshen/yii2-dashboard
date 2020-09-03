@@ -1,14 +1,16 @@
 <?php
 
-namespace backend\widgets\mediamanager;
+namespace backend\modules\media\widgets;
 
 use yii\web\AssetBundle;
 
-class Asset extends AssetBundle
+class MediaAsset extends AssetBundle
 {
-    public $css = [];
+    public $css = [
+        'custom.css'
+    ];
     public $js = [
-        'js/custom.js',
+        'custom.js',
     ];
     public $publishOptions = [
         'forceCopy' => YII_DEBUG ? true : false,
@@ -20,6 +22,6 @@ class Asset extends AssetBundle
 
     public function init()
     {
-        $this->sourcePath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'assets';
+        $this->sourcePath = dirname(__FILE__) . DIRECTORY_SEPARATOR . '../assets';
     }
 }

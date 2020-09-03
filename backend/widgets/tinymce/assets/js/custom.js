@@ -1,10 +1,10 @@
-(function() {
-    this.initTinyMCE = function() {
+(function () {
+    this.initTinyMCE = function () {
         // Defaults params
         var params = {
-            uploadUrl: 'index.php?r=media/json-upload',
-            deleteUrl: 'index.php?r=media/json-delete',
-            managerUrl: 'index.php?r=media/manager-list',
+            uploadUrl: '/media/upload',
+            deleteUrl: '/media/delete',
+            managerUrl: '/media/list',
             managerPage: '1',
             managerFolder: '',
             allowExtensions: ['jpg', 'png', 'gif', 'jpeg'],
@@ -42,7 +42,7 @@
             automatic_uploads: true,
             images_reuse_filename: true,
             file_picker_types: 'image',
-            images_upload_handler: function(blobInfo, success, failure) {
+            images_upload_handler: function (blobInfo, success, failure) {
                 $.ajax({
                     url: params.uploadUrl,
                     type: 'POST',
@@ -60,7 +60,7 @@
                 });
             },
             // Setup
-            setup: function(editor) {
+            setup: function (editor) {
                 // Insert local image
                 var node = document.createElement('input');
                 node.setAttribute('type', 'file');
@@ -87,21 +87,22 @@
 
                     var reader = new FileReader();
                     reader.readAsDataURL(file);
-                    reader.onload = function() {
+                    reader.onload = function () {
                         var id = 'blobid' + (new Date()).getTime() + Math.floor(Math.random() * 1000);
-                        var blobCache =  editor.editorUpload.blobCache;
+                        var blobCache = editor.editorUpload.blobCache;
                         var base64 = reader.result.split(',')[1];
                         var blobInfo = blobCache.create(id, file, base64);
                         blobCache.add(blobInfo);
                         if (typeof editor.settings.images_upload_handler === 'function') {
-                            editor.settings.images_upload_handler(blobInfo, function(path) {
+                            editor.settings.images_upload_handler(blobInfo, function (path) {
                                 editor.insertContent('<img src="' + path + '"/>');
-                            }, function(path) {});
+                            }, function (path) {
+                            });
                         }
                     };
                 }
 
-                node.onchange = function() {
+                node.onchange = function () {
                     if (this.files.length) {
                         for (var i = 0; i < this.files.length; i++) {
                             uploadHandler(this.files[i]);
@@ -123,24 +124,26 @@
                 function closeHandler() {
                     win.close();
                 }
+
                 function insertHandler() {
                     var selected = $(win.getEl()).find('.media-image.selected .media-thumbnail');
                     if (selected.length) {
                         var imgs = '';
-                        $(selected).each(function(key, val) {
+                        $(selected).each(function (key, val) {
                             imgs += '<img src="' + $(val).attr('data-path') + '"/>';
                         });
                         editor.insertContent(imgs);
                     }
                     win.close();
                 }
+
                 function deleteHandler() {
                     var selected = $(win.getEl()).find('.media-image.selected .media-thumbnail');
                     if (selected.length) {
-                        editor.windowManager.confirm('Are you sure you want to delete this item?', function(res) {
+                        editor.windowManager.confirm('Are you sure you want to delete this item?', function (res) {
                             if (res) {
                                 var paths = [];
-                                $(selected).each(function(key, val) {
+                                $(selected).each(function (key, val) {
                                     paths.push($(val).attr('data-path'));
                                 });
                                 $.ajax({
@@ -148,7 +151,7 @@
                                     type: 'POST',
                                     data: {paths: paths},
                                     dataType: 'json',
-                                    success: function(data) {
+                                    success: function (data) {
                                         console.log(data);
                                         editor.windowManager.alert(data.msg);
                                         if (data.status) loadFilesHtml();
@@ -160,6 +163,7 @@
                         editor.windowManager.alert('Please select files');
                     }
                 }
+
                 function winOpenHander() {
                     var width = Math.min(window.innerWidth - 40, 860),
                         height = Math.min(window.innerHeight - 120, 500);
@@ -184,14 +188,14 @@
                     });
 
                     var winEl = $(win.getEl());
-                    winEl.on('click', '.media-image', function() {
+                    winEl.on('click', '.media-image', function () {
                         $(this).toggleClass('selected');
                     });
-                    winEl.on('click', '.media-folder .media-thumbnail', function() {
+                    winEl.on('click', '.media-folder .media-thumbnail', function () {
                         params.managerFolder = $(this).attr('data-path');
                         loadFilesHtml();
                     });
-                    winEl.on('click', '.pagination a', function(e) {
+                    winEl.on('click', '.pagination a', function (e) {
                         e.preventDefault();
                         var page = $(this).attr('data-page');
                         page = parseInt(page);
@@ -201,8 +205,9 @@
 
                     loadFilesHtml();
                 }
+
                 function loadFilesHtml() {
-                    $.get(params.managerUrl, {page: params.managerPage, folder: params.managerFolder}, function(data) {
+                    $.get(params.managerUrl, {page: params.managerPage, folder: params.managerFolder}, function (data) {
                         $(win.getEl()).find('#file-manager-wrap').html(data);
                     });
                 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace common\components;
+namespace backend\modules\media\components;
 
 use Yii;
 use yii\db\Exception;

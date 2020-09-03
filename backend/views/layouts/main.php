@@ -54,7 +54,7 @@ AppAsset::register($this);
                             ['label' => Yii::t('app', 'User'), 'url' => ['/user/index']],
                             ['label' => Yii::t('app', 'Manager'), 'url' => ['/manager/index']],
                             ['label' => Yii::t('app', 'Language'), 'url' => ['/language/index']],
-                            ['label' => Yii::t('app', 'Media'), 'url' => ['/media/index']],
+                            ['label' => Yii::t('app', 'Media'), 'url' => ['/media/manager/index']],
                             [
                                 'label' => Yii::t('app', 'CMS'),
                                 'url' => '#',

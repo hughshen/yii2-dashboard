@@ -1,12 +1,12 @@
-(function() {
-    this.initMediaManager = function() {
+(function () {
+    this.initMediaManager = function () {
 
         // Defaults options
         var options = {
             target: '.media-manager-target',
             targetView: '.media-target-view',
             toggle: '.media-manager-toggle',
-            managerUrl: 'index.php?r=media/manager-list',
+            managerUrl: 'index.php?r=/media/manager/popup',
         };
 
         if (arguments[0] && typeof arguments[0] === 'object') {
@@ -25,13 +25,13 @@
         var currentPage = 1;
         var currentFolder = '';
 
-        toggle.on('click', function() {
+        toggle.on('click', function () {
             showModal();
-            $.get(options.managerUrl, function(data) {
+            $.get(options.managerUrl, function (data) {
                 wrap.html(data);
             });
         });
-        wrap.on('dblclick', '.media-image .media-thumbnail', function() {
+        wrap.on('dblclick', '.media-image .media-thumbnail', function () {
             target.val($(this).attr('data-path'));
             if (targetView.length > 0) {
                 targetView.css('display', '');
@@ -39,18 +39,18 @@
             }
             hideModal();
         });
-        wrap.on('click', 'a', function(e) {
+        wrap.on('click', 'a', function (e) {
             e.preventDefault();
             var page = $(this).attr('data-page');
-            page = parseInt(page);
+            page = typeof page === 'undefined' ? 0 : parseInt(page);
             currentPage = page + 1;
-            $.get(options.managerUrl, {page: currentPage, folder: currentFolder}, function(data) {
+            $.get(options.managerUrl, {page: currentPage, folder: currentFolder}, function (data) {
                 wrap.html(data);
             });
         });
-        wrap.on('click', '.media-folder .media-thumbnail', function() {
+        wrap.on('click', '.media-folder .media-thumbnail', function () {
             currentFolder = $(this).attr('data-path');
-            $.get(options.managerUrl, {folder: currentFolder}, function(data) {
+            $.get(options.managerUrl, {folder: currentFolder}, function (data) {
                 wrap.html(data);
             });
         });
