@@ -54,15 +54,8 @@ class TinyMCEEditor extends \yii\widgets\InputWidget
         $view = $this->getView();
         TinyMCEAsset::register($view);
 
-        $allowExtensions = [];
-        if (isset(Yii::$app->params['allowExtensions'])) {
-            $allowExtensions = Yii::$app->params['allowExtensions'];
-        }
-
-        $allowMimeTypes = [];
-        if (isset(Yii::$app->params['allowMimeTypes'])) {
-            $allowMimeTypes = Yii::$app->params['allowMimeTypes'];
-        }
+        $allowExtensions = Yii::$app->params['allowExtensions'];
+        $allowMimeTypes = Yii::$app->params['allowMimeTypes'];
 
         $view->registerJs('
         initTinyMCE({
