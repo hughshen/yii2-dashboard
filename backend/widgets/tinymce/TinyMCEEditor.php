@@ -6,8 +6,6 @@ use Yii;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\Json;
-use yii\helpers\ArrayHelper;
-use backend\modules\media\components\Media;
 
 class TinyMCEEditor extends \yii\widgets\InputWidget
 {
@@ -56,8 +54,15 @@ class TinyMCEEditor extends \yii\widgets\InputWidget
         $view = $this->getView();
         TinyMCEAsset::register($view);
 
-        $allowExtensions = Media::ALLOW_EXTENSIONS;
-        $allowMimeTypes = implode(',', Media::ALLOW_MIME_TYPES);
+        $allowExtensions = [];
+        if (isset(Yii::$app->params['allowExtensions'])) {
+            $allowExtensions = Yii::$app->params['allowExtensions'];
+        }
+
+        $allowMimeTypes = [];
+        if (isset(Yii::$app->params['allowMimeTypes'])) {
+            $allowMimeTypes = Yii::$app->params['allowMimeTypes'];
+        }
 
         $view->registerJs('
         initTinyMCE({
