@@ -19,7 +19,7 @@
         var options = {
             selector: '',
             branding: false,
-            valid_children: '+body[style]',
+            valid_children: '+body[style],+a[div|h1|h2|h3|h4|h5|h6|p]',
             valid_elements: '*[*]',
             height: 300,
             // language: 'zh_TW',
