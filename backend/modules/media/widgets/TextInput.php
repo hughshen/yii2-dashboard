@@ -41,8 +41,16 @@ class TextInput extends \yii\bootstrap\InputWidget
             'style' => $viewStyle,
         ]);
         // View end
-        $input .= Html::textInput($inputName, $inputValue, ['class' => 'form-control', 'id' => $this->id, 'style' => 'padding-left: 45px;']);
-        $input .= Html::tag('span', '<i class="glyphicon glyphicon-picture"></i>', ['class' => 'btn btn-success media-manager-toggle', 'style' => 'margin-bottom: 0px; position: absolute; bottom: 0; left: 0;']);
+        $input .= Html::textInput($inputName, $inputValue, [
+            'id' => $this->id,
+            'class' => 'form-control',
+            'style' => 'padding-left: 45px;',
+        ]);
+        $input .= Html::tag('span', '<i class="glyphicon glyphicon-picture"></i>', [
+            'id' => $this->id . '-toggle',
+            'class' => 'btn btn-success media-manager-toggle',
+            'style' => 'margin-bottom: 0px; position: absolute; bottom: 0; left: 0;',
+        ]);
         $input .= Html::endTag('div');
 
         return $input;
@@ -55,8 +63,10 @@ class TextInput extends \yii\bootstrap\InputWidget
 
         $view->registerJs('
         initMediaManager({
+            id: "' . $this->id . '-modal",
             target: "#' . $this->id . '",
             targetView: "#' . $this->id . '-view",
+            toggle: "#' . $this->id . '-toggle",
             managerUrl: "' . Url::to(['/media/manager/popup']) . '",
         });
         ', \yii\web\View::POS_END);
