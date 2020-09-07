@@ -5,41 +5,39 @@ namespace backend\modules\media\controllers;
 use Yii;
 use yii\web\UploadedFile;
 use yii\data\Pagination;
-use backend\modules\media\components\Media;
 use backend\modules\media\models\UploadForm;
 
 class ManagerController extends \backend\controllers\BackendController
 {
-    public function actionIndex()
+    public function actionIndex($path = '', $search = '')
     {
         $model = new UploadForm();
         if (Yii::$app->request->isPost) {
+            try {
+                $model->load(Yii::$app->request->post());
+                $model->files = UploadedFile::getInstances($model, 'files');
 
-            $model->files = UploadedFile::getInstances($model, 'files');
-
-            if ($model->validate()) {
-                try {
-                    Media::saveFiles($model->files, Yii::$app->request->get('folder'));
-
-                    Yii::$app->session->setFlash('success', Yii::t('app', 'Upload success'));
-                    return $this->redirect(['index', 'folder' => Yii::$app->request->get('folder')]);
-                } catch (\Exception $e) {
-                    Yii::$app->session->setFlash('error', $e->getMessage());
+                $path = $this->module->fs->normalizePath($model->path);
+                if (empty($path) || !$this->module->fs->has($path)) {
+                    throw new \yii\base\Exception(Yii::t('app', 'Invalid path'));
                 }
-            } else if (isset($model->errors['files'])) {
-                Yii::$app->session->setFlash('error', $model->errors['files'][0]);
-            } else {
-                Yii::$app->session->setFlash('error', Yii::t('app', 'Upload failed'));
+
+                $model->upload($this->module->fs);
+
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Upload success'));
+            } catch (\Exception $e) {
+                Yii::$app->session->setFlash('error', $e->getMessage());
             }
+
+            return $this->redirect(Yii::$app->request->getReferrer());
+        } else {
+            $model->path = $path;
         }
 
-        list($list, $listCount) = Media::getFileList(Yii::$app->request->get('folder'), Yii::$app->request->get('search'));
-
-        $pages = new Pagination(['totalCount' => $listCount]);
-        $data = Media::getFileData($list, $pages->offset, $pages->limit);
+        list($data, $pages) = $this->getDataByPath($path, $search);
 
         return $this->render('index', [
-            'list' => $data,
+            'list' => array_splice($data, $pages->offset, $pages->limit),
             'pages' => $pages,
             'model' => $model,
         ]);
@@ -48,8 +46,20 @@ class ManagerController extends \backend\controllers\BackendController
     public function actionDelete()
     {
         if (Yii::$app->request->isPost) {
-            Media::deletePath(Yii::$app->request->get('path'), Yii::$app->request->get('type'));
-            Yii::$app->session->setFlash('success', Yii::t('app', 'Delete success'));
+            $path = Yii::$app->request->get('path');
+            $type = Yii::$app->request->get('type');
+
+            try {
+                if ($type === 'dir') {
+                    $this->module->fs->deleteDir($path);
+                } else {
+                    $this->module->fs->delete($path);
+                }
+
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Delete success'));
+            } catch (\Exception $e) {
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
 
             return $this->redirect(Yii::$app->request->getReferrer());
         }
@@ -57,38 +67,49 @@ class ManagerController extends \backend\controllers\BackendController
         $this->throwNotFound();
     }
 
-    public function actionCreateFolder()
+    public function actionCreate()
     {
-        $folder = Yii::$app->request->get('folder');
-        $create = Yii::$app->request->get('create');
+        $path = Yii::$app->request->post('path');
+        $folder = Yii::$app->request->post('folder');
 
-        if ($create) {
+        if (Yii::$app->request->isPost && !empty(trim($folder))) {
             try {
-                $new = $folder . '/' . $create;
-                $created = Media::createFolder($new);
-                if ($created === true) {
-                    Yii::$app->session->setFlash('success', Yii::t('app', 'Create folder success'));
-                } else {
+                $newDirPath = trim(trim($path, '/')) . '/' . trim(trim($folder, '/'));
+                $created = $this->module->fs->createDir($newDirPath);
+                if ($created === false) {
                     Yii::$app->session->setFlash('error', Yii::t('app', 'Create folder failed'));
+                } else {
+                    Yii::$app->session->setFlash('success', Yii::t('app', 'Create folder success'));
                 }
             } catch (\Exception $e) {
                 Yii::$app->session->setFlash('error', $e->getMessage());
             }
         }
 
-        return $this->redirect(['index', 'folder' => $folder]);
+        return $this->redirect(['index', 'path' => $path]);
     }
 
-    public function actionPopup()
+    public function actionPopup($path = '')
     {
-        list($list, $listCount) = Media::getFileList(Yii::$app->request->get('folder'));
-
-        $pages = new Pagination(['totalCount' => $listCount, 'defaultPageSize' => 12]);
-        $data = Media::getFileData($list, $pages->offset, $pages->limit);
+        list($data, $pages) = $this->getDataByPath($path);
 
         return $this->renderPartial('popup', [
-            'list' => $data,
+            'list' => array_splice($data, $pages->offset, $pages->limit),
             'pages' => $pages,
         ]);
+    }
+
+    public function getDataByPath($path = '', $search = '')
+    {
+        $path = $this->module->fs->normalizePath($path);
+        if (!empty($path) and !$this->module->fs->has($path)) {
+            $data = [];
+        } else {
+            $data = $this->module->fs->listContents($path, false, $search);
+        }
+
+        $pages = new Pagination(['totalCount' => count($data)]);
+
+        return [$data, $pages];
     }
 }

@@ -4,8 +4,6 @@ namespace backend\modules\media\controllers;
 
 use Yii;
 use yii\web\Response;
-use yii\data\Pagination;
-use backend\modules\media\components\Media;
 
 class ApiController extends \backend\controllers\BackendController
 {
@@ -22,7 +20,7 @@ class ApiController extends \backend\controllers\BackendController
         $filename = Yii::$app->request->post('filename');
 
         try {
-            $res = Media::saveByData($image, $filename);
+            $res = $this->module->fs->saveBase64Data($image, $filename);
             if (is_string($res)) {
                 $json['status'] = 1;
                 $json['path'] = $res;
@@ -49,7 +47,7 @@ class ApiController extends \backend\controllers\BackendController
 
         if (!empty($paths)) {
             foreach ($paths as $path) {
-                Media::deleteFile($path);
+                $this->module->fs->delete($path);
             }
             $json['status'] = 1;
             $json['msg'] = Yii::t('app', 'Delete success');

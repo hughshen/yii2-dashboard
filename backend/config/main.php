@@ -20,6 +20,7 @@ return [
         ],
         'media' => [
             'class' => 'backend\modules\media\Module',
+            'fsComponent' => 'fsFrontend',
         ],
     ],
     'components' => [
@@ -57,6 +58,10 @@ return [
         */
         'extraFieldInput' => [
             'class' => 'backend\widgets\ExtraFieldInput',
+        ],
+        'fsFrontend' => [
+            'class' => 'creocoder\flysystem\LocalFilesystem',
+            'path' => '@frontend/web/uploads',
         ],
     ],
     'params' => $params,

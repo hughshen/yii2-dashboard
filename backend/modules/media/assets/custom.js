@@ -3,6 +3,7 @@
 
         // Defaults options
         var options = {
+            id: 'media-unique-id',
             target: '.media-manager-target',
             targetView: '.media-target-view',
             toggle: '.media-manager-toggle',
@@ -17,49 +18,63 @@
 
         appendModal();
 
-        var wrap = $('#media-wrap');
+        var wrap = $('#' + options.id + '-media-wrap');
         var target = $(options.target);
         var toggle = $(options.toggle);
         var targetView = $(options.targetView);
+        var datalLoaded = false;
 
         var currentPage = 1;
-        var currentFolder = '';
+        var currentPath = '';
 
         toggle.on('click', function () {
             showModal();
-            $.get(options.managerUrl, function (data) {
-                wrap.html(data);
-            });
+            if (!datalLoaded) {
+                $.get(options.managerUrl, function (data) {
+                    datalLoaded = true;
+                    wrap.html(data);
+                });
+            }
         });
-        wrap.on('dblclick', '.media-image .media-thumbnail', function () {
-            target.val($(this).attr('data-path'));
+        wrap.on('dblclick', '.media-file .media-thumbnail', function () {
+            var linkEle = $(this).find('.media-link').eq(0);
+            target.val(linkEle.attr('data-url'));
             if (targetView.length > 0) {
-                targetView.css('display', '');
-                targetView.find('img').eq(0).attr('src', $(this).attr('data-path'));
+                if (linkEle.attr('data-image') === '0') {
+                    targetView.css('display', 'none');
+                } else {
+                    targetView.css('display', '');
+                    targetView.find('img').eq(0).attr('src', linkEle.attr('data-url'));
+                }
             }
             hideModal();
         });
-        wrap.on('click', 'a', function (e) {
+        wrap.on('click', '.media-dir .media-thumbnail', function () {
+            currentPath = $(this).find('.media-link').eq(0).attr('data-path');
+            $.get(options.managerUrl, {path: currentPath}, function (data) {
+                wrap.html(data);
+            });
+        });
+        wrap.on('click', '.breadcrumb .media-link', function () {
+            currentPath = $(this).attr('data-path');
+            $.get(options.managerUrl, {path: currentPath}, function (data) {
+                wrap.html(data);
+            });
+        });
+        wrap.on('click', '.pagination a', function (e) {
             e.preventDefault();
             var page = $(this).attr('data-page');
             page = typeof page === 'undefined' ? 0 : parseInt(page);
             currentPage = page + 1;
-            $.get(options.managerUrl, {page: currentPage, folder: currentFolder}, function (data) {
-                wrap.html(data);
-            });
-        });
-        wrap.on('click', '.media-folder .media-thumbnail', function () {
-            currentFolder = $(this).attr('data-path');
-            $.get(options.managerUrl, {folder: currentFolder}, function (data) {
+            $.get(options.managerUrl, {page: currentPage, path: currentPath}, function (data) {
                 wrap.html(data);
             });
         });
 
         function appendModal() {
-            var ele = $('#media-modal');
-            if (ele.length) return;
+            if ($('#' + options.id).length) return;
 
-            $('body').append('<div id="media-modal" class="fade modal" role="dialog" tabindex="-1" style="display: none;">'
+            $('body').append('<div id="' + options.id + '" class="fade modal" role="dialog" tabindex="-1" style="display: none;">'
                 + '<div class="modal-dialog">'
                 + '<div class="modal-content">'
                 + '<div class="modal-header">'
@@ -67,7 +82,7 @@
                 + '<h2>Media Manager</h2>'
                 + '</div>'
                 + '<div class="modal-body">'
-                + '<div class="media-wrap" id="media-wrap"></div>'
+                + '<div class="media-wrap" id="' + options.id + '-media-wrap"></div>'
                 + '</div>'
                 + '</div>'
                 + '</div>'
@@ -75,11 +90,11 @@
         }
 
         function showModal() {
-            $('#media-modal').modal('show');
+            $('#' + options.id).modal('show');
         }
 
         function hideModal() {
-            $('#media-modal').modal('hide');
+            $('#' + options.id).modal('hide');
         }
     };
 

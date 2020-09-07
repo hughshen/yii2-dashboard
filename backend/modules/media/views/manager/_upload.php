@@ -14,10 +14,12 @@ use yii\widgets\ActiveForm;
     ]);
     ?>
 
+    <?= $form->field($model, 'path')->hiddenInput()->label(false) ?>
+
     <?= $form->field($model, 'files[]')->fileInput(['multiple' => true]) ?>
 
     <div class="form-group">
-        <?=  Html::submitButton('Submit', ['class' => 'btn btn-primary', 'name' =>'submit-button']) ?>
+        <?= Html::submitButton('Submit', ['class' => 'btn btn-primary', 'name' => 'submit-button']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

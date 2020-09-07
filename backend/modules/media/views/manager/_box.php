@@ -3,23 +3,64 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 
+$path = Yii::$app->request->get('path');
+$disableUrl = isset($disableUrl) && $disableUrl === true
+
 ?>
+<div class="media-paths">
+    <ol class="breadcrumb">
+        <?php
+        $linkOptions = ['class' => 'media-link', 'data-path' => ''];
+
+        echo Html::beginTag('li');
+        echo Html::a('Home', $disableUrl ? 'javascript:;' : ['index'], $linkOptions);
+        echo Html::endTag('li');
+
+        $pathArr = !empty(trim($path)) ? explode('/', $path) : [];
+        if (!empty($pathArr)) {
+            $nextPath = null;
+            foreach ($pathArr as $val) {
+                $nextPath = $nextPath === null ? $val : $nextPath . '/' . $val;
+                $linkOptions['data-path'] = $nextPath;
+                echo Html::beginTag('li');
+                echo Html::a($val, $disableUrl ? 'javascript:;' : ['index', 'path' => $nextPath], $linkOptions);
+                echo Html::endTag('li');
+            }
+        }
+        ?>
+    </ol>
+</div>
+
 <div class="media-box">
     <?php foreach ($list as $item): ?>
         <div class="media-item media-<?= $item['type'] ?>">
-            <div class="media-thumbnail" data-path="<?= $item['path'] ?>">
+            <div class="media-thumbnail">
                 <?php
                 $img = null;
                 $target = null;
+                $linkOptions = [
+                    'class' => 'media-link',
+                    'data-dir' => $item['dirname'],
+                    'data-url' => '',
+                    'data-path' => $item['path'],
+                ];
                 switch ($item['type']) {
-                    case 'folder':
-                        $url = Url::to(['index', 'folder' => $item['path']]);
-                        $img = '<svg height="120px" width="120px" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M430.1,192H81.9c-17.7,0-18.6,9.2-17.6,20.5l13,183c0.9,11.2,3.5,20.5,21.1,20.5h316.2c18,0,20.1-9.2,21.1-20.5l12.1-185.3   C448.7,199,447.8,192,430.1,192z"/><g><path d="M426.2,143.3c-0.5-12.4-4.5-15.3-15.1-15.3c0,0-121.4,0-143.2,0c-21.8,0-24.4,0.3-40.9-17.4C213.3,95.8,218.7,96,190.4,96    c-22.6,0-75.3,0-75.3,0c-17.4,0-23.6-1.5-25.2,16.6c-1.5,16.7-5,57.2-5.5,63.4h343.4L426.2,143.3z"/></g></g></svg>';
+                    case 'dir':
+                        $url = Url::to(['index', 'path' => $item['path']]);
+                        $img = '<svg width="100px" height="100px" viewBox="0 0 16 16" class="bi bi-folder-fill" fill="black" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z"/></svg>';
                         break;
-                    default:
+                    case 'file':
                         $target = '_blank';
-                        $url = $item['path'];
-                        $img = Html::img($item['thumb']);
+                        $url = $item['url'];
+                        $linkOptions['data-url'] = $item['url'];
+                        $linkOptions['data-image'] = $item['image'];
+
+                        if ($item['image'] === 1) {
+                            $img = Html::img($item['url']);
+                        } else {
+                            $img = '<svg width="90px" height="100px" viewBox="0 0 16 16" class="bi bi-file-text-fill" fill="black" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"/></svg>';
+                        }
+
                         break;
                 }
 
@@ -29,7 +70,8 @@ use yii\helpers\Html;
                 }
 
                 if ($img !== null) {
-                    echo Html::a($img, $url, ['target' => $target]);
+                    $linkOptions['target'] = $target;
+                    echo Html::a($img, $url, $linkOptions);
                 }
                 ?>
             </div>
@@ -37,25 +79,23 @@ use yii\helpers\Html;
             <?php if (isset($caption) && $caption): ?>
                 <div class="media-caption">
                     <span class="name">
-                        <?= Html::a($item['name'], $url, ['title' => $item['name'], 'target' => $target]) ?>
+                        <?= Html::a($item['basename'], $url, ['title' => $item['basename'], 'target' => $target]) ?>
                     </span>
 
-                    <?php if ((!isset($item['trash']) || $item['trash']) && $item['name'] != '..') { ?>
-                        <a href="<?= Url::to(['delete', 'path' => $item['path'], 'type' => $item['type']]) ?>"
-                           data-confirm="<?= Yii::t('app', 'Are you sure you want to delete this item?') ?>"
-                           data-method="post"><i class="glyphicon glyphicon-trash"></i></a>
-                    <?php } ?>
+                    <a href="<?= Url::to(['delete', 'path' => $item['path'], 'type' => $item['type']]) ?>"
+                       data-confirm="<?= Yii::t('app', 'Are you sure you want to delete this item?') ?>"
+                       data-method="post"><i class="glyphicon glyphicon-trash"></i></a>
 
-                    <?php if (false && $item['type'] == 'image') { ?>
+                    <?php if (false && $item['type'] !== 'dir') { ?>
                         <a href="javascript:;" class="copy-text" data-text="<?= $item['path'] ?>"><i
-                                class="glyphicon glyphicon-ok"></i></a>
+                                    class="glyphicon glyphicon-ok"></i></a>
                     <?php } ?>
                 </div>
             <?php endif; ?>
 
             <?php if (isset($mediaName) && $mediaName): ?>
                 <div class="media-name">
-                    <span class="name"><?= $item['name'] ?></span>
+                    <span class="name"><?= $item['basename'] ?></span>
                 </div>
             <?php endif; ?>
         </div>

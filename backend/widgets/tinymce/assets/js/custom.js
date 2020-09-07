@@ -126,11 +126,16 @@
                 }
 
                 function insertHandler() {
-                    var selected = $(win.getEl()).find('.media-image.selected .media-thumbnail');
+                    var selected = $(win.getEl()).find('.media-file.selected .media-thumbnail');
                     if (selected.length) {
                         var imgs = '';
                         $(selected).each(function (key, val) {
-                            imgs += '<img src="' + $(val).attr('data-path') + '"/>';
+                            var linkEle = $(val).find('.media-link').eq(0);
+                            if (parseInt(linkEle.attr('data-image')) === 1) {
+                                imgs += '<img src="' + linkEle.attr('data-url') + '"/>';
+                            } else {
+                                imgs += '<a href="' + linkEle.attr('data-url') + '">' + linkEle.attr('data-url') + '</a>';
+                            }
                         });
                         editor.insertContent(imgs);
                     }
@@ -138,13 +143,13 @@
                 }
 
                 function deleteHandler() {
-                    var selected = $(win.getEl()).find('.media-image.selected .media-thumbnail');
+                    var selected = $(win.getEl()).find('.media-file.selected .media-thumbnail');
                     if (selected.length) {
                         editor.windowManager.confirm('Are you sure you want to delete this item?', function (res) {
                             if (res) {
                                 var paths = [];
                                 $(selected).each(function (key, val) {
-                                    paths.push($(val).attr('data-path'));
+                                    paths.push($(val).find('.media-link').eq(0).attr('data-path'));
                                 });
                                 $.ajax({
                                     url: params.deleteUrl,
@@ -188,10 +193,14 @@
                     });
 
                     var winEl = $(win.getEl());
-                    winEl.on('click', '.media-image', function () {
+                    winEl.on('click', '.media-file', function () {
                         $(this).toggleClass('selected');
                     });
-                    winEl.on('click', '.media-folder .media-thumbnail', function () {
+                    winEl.on('click', '.media-dir .media-thumbnail', function () {
+                        params.managerFolder = $(this).find('.media-link').eq(0).attr('data-path');
+                        loadFilesHtml();
+                    });
+                    winEl.on('click', '.breadcrumb .media-link', function () {
                         params.managerFolder = $(this).attr('data-path');
                         loadFilesHtml();
                     });
@@ -207,7 +216,7 @@
                 }
 
                 function loadFilesHtml() {
-                    $.get(params.managerUrl, {page: params.managerPage, folder: params.managerFolder}, function (data) {
+                    $.get(params.managerUrl, {page: params.managerPage, path: params.managerFolder}, function (data) {
                         $(win.getEl()).find('#file-manager-wrap').html(data);
                     });
                 }

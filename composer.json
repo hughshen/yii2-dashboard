@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "phpmailer/phpmailer": "^6.0",
         "tinymce/tinymce": "^4.7",
-        "yiister/yii2-gentelella": "~1.0"
+        "yiister/yii2-gentelella": "~1.0",
+        "creocoder/yii2-flysystem": "^0.10.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

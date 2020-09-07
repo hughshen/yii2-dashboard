@@ -10,15 +10,18 @@ MediaAsset::register($this);
 
 $this->title = Yii::t('app', 'Media');
 $this->params['breadcrumbs'][] = $this->title;
+
+$path = Yii::$app->request->get('path');
+$search = Yii::$app->request->get('search');
 ?>
 <div class="media-search">
     <div class="row">
         <div class="col-md-6">
             <?= Html::beginForm(['index'], 'get') ?>
-            <?= Html::hiddenInput('folder', Yii::$app->request->get('folder')) ?>
+            <?= Html::hiddenInput('path', $path) ?>
             <div class="row">
                 <div class="col-md-4">
-                    <?= Html::textInput('search', Yii::$app->request->get('search'), ['class' => 'form-control']) ?>
+                    <?= Html::textInput('search', $search, ['class' => 'form-control']) ?>
                 </div>
                 <div class="col-md-8">
                     <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
@@ -28,11 +31,11 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= Html::endForm() ?>
         </div>
         <div class="col-md-6">
-            <?= Html::beginForm(['create-folder'], 'get') ?>
-            <?= Html::hiddenInput('folder', Yii::$app->request->get('folder')) ?>
+            <?= Html::beginForm(['create'], 'post') ?>
+            <?= Html::hiddenInput('path', $path) ?>
             <div class="row">
                 <div class="col-md-4">
-                    <?= Html::textInput('create', null, ['class' => 'form-control']) ?>
+                    <?= Html::textInput('folder', null, ['class' => 'form-control']) ?>
                 </div>
                 <div class="col-md-8">
                     <?= Html::submitButton(Yii::t('app', 'Create Folder'), ['class' => 'btn btn-primary']) ?>

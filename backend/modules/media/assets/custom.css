@@ -1,9 +1,29 @@
 /* Media Manager */
-#media-wrap {
+.media-wrap {
     padding: 10px;
     max-height: 400px;
     overflow-y: scroll;
     overflow-x: hidden;
+}
+
+.media-wrap .media-box {
+    min-height: 100px;
+}
+
+.media-area ol.breadcrumb li a {
+    font-size: 15px;
+}
+
+.media-area ol.breadcrumb li i {
+    font-size: 20px;
+}
+
+.media-paths .breadcrumb {
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    list-style: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
 }
 
 .media-box .media-item {
@@ -17,6 +37,7 @@
     border: 2px solid #e8e8e8;
     padding: 10px;
     cursor: pointer;
+    text-align: center;
 }
 
 .media-box .media-item:hover {
@@ -24,10 +45,21 @@
 }
 
 .media-item .media-thumbnail {
+    height: 100px;
     max-height: 100px;
     overflow: hidden;
     margin-bottom: 1rem;
     text-align: center;
+}
+
+.media-item .media-thumbnail a {
+    display: block;
+    text-align: center;
+}
+
+.media-item .media-thumbnail a i {
+    color: #000;
+    font-size: 100px;
 }
 
 .media-item .media-thumbnail img {
