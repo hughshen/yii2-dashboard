@@ -15,7 +15,7 @@ class Menu extends Category
         return 'menu';
     }
 
-    public function extraFields()
+    public function appendExtraFields()
     {
         $this->extractExtraData();
         $menuType = $this->getExtraValue('type');
