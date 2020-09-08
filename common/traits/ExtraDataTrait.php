@@ -111,7 +111,7 @@ trait ExtraDataTrait
     /**
      * Extra fields
      */
-    public function extraFields()
+    public function appendExtraFields()
     {
         return [];
     }
@@ -121,7 +121,7 @@ trait ExtraDataTrait
      */
     public function allExtraFields()
     {
-        return ArrayHelper::merge($this->defaultExtraFields(), $this->extraFields());
+        return ArrayHelper::merge($this->defaultExtraFields(), $this->appendExtraFields());
     }
 
     /**
