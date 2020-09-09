@@ -112,6 +112,12 @@ class ManagerController extends \backend\controllers\BackendController
             $data = $this->module->fs->listContents($path, false, $search);
         }
 
+        usort($data, function ($a, $b) {
+            $a = ($a['type'] === 'dir' ? '00000' : '') . $a['basename'];
+            $b = ($b['type'] === 'dir' ? '00000' : '') . $b['basename'];
+            return strnatcmp($a, $b);
+        });
+
         $pages = new Pagination(['totalCount' => count($data)]);
 
         return [$data, $pages];
