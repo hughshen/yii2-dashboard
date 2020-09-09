@@ -65,7 +65,7 @@ class TinyMCEEditor extends \yii\widgets\InputWidget
             deleteUrl: "' . $this->fileDeleteUrl . '",
             managerUrl: "' . $this->fileManagerUrl . '",
             allowExtensions: ' . Json::encode($allowExtensions) . ',
-            allowMimeTypes: "' . $allowMimeTypes . '",        
+            allowMimeTypes: "' . implode(',', $allowMimeTypes) . '",        
         });
         ', \yii\web\View::POS_END);
     }
