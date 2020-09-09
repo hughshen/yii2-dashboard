@@ -157,7 +157,6 @@
                                     data: {paths: paths},
                                     dataType: 'json',
                                     success: function (data) {
-                                        console.log(data);
                                         editor.windowManager.alert(data.msg);
                                         if (data.status) loadFilesHtml();
                                     }
