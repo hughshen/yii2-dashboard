@@ -6,43 +6,67 @@ use Yii;
 use yii\web\UploadedFile;
 use yii\data\Pagination;
 use backend\modules\media\models\UploadForm;
+use backend\modules\media\models\CreateForm;
 
 class ManagerController extends \backend\controllers\BackendController
 {
     public function actionIndex($path = '', $search = '')
     {
-        $model = new UploadForm();
-        $model->setFileSystem($this->module->fs);
+        $uploadModel = new UploadForm();
+        $uploadModel->setFileSystem($this->module->fs);
+        $uploadModel->path = $path;
 
-        if (Yii::$app->request->isPost) {
-            try {
-                $model->load(Yii::$app->request->post());
-                $model->files = UploadedFile::getInstances($model, 'files');
-
-                $path = $this->module->fs->normalizePath($model->path);
-                if (!empty($path) && !$this->module->fs->has($path)) {
-                    throw new \yii\base\Exception(Yii::t('app', 'Invalid path'));
-                }
-
-                $model->upload($this->module->fs);
-
-                Yii::$app->session->setFlash('success', Yii::t('app', 'Upload success'));
-            } catch (\Exception $e) {
-                Yii::$app->session->setFlash('error', $e->getMessage());
-            }
-
-            return $this->redirect(Yii::$app->request->getReferrer());
-        } else {
-            $model->path = $path;
-        }
+        $createModel = new CreateForm();
+        $createModel->setFileSystem($this->module->fs);
+        $createModel->path = $path;
 
         list($data, $pages) = $this->getDataByPath($path, $search);
 
         return $this->render('index', [
             'list' => array_splice($data, $pages->offset, $pages->limit),
             'pages' => $pages,
-            'model' => $model,
+            'uploadModel' => $uploadModel,
+            'createModel' => $createModel,
         ]);
+    }
+
+    public function actionUpload()
+    {
+        $model = new UploadForm();
+        $model->setFileSystem($this->module->fs);
+
+        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
+            try {
+                $model->files = UploadedFile::getInstances($model, 'files');
+                $model->upload();
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Upload success'));
+            } catch (\Exception $e) {
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
+
+            return $this->redirect(Yii::$app->request->getReferrer());
+        }
+
+        return $this->throwNotFound();
+    }
+
+    public function actionCreate()
+    {
+        $model = new CreateForm();
+        $model->setFileSystem($this->module->fs);
+
+        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
+            try {
+                $model->create();
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Create folder success'));
+            } catch (\Exception $e) {
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
+
+            return $this->redirect(Yii::$app->request->getReferrer());
+        }
+
+        return $this->throwNotFound();
     }
 
     public function actionDelete()
@@ -67,28 +91,6 @@ class ManagerController extends \backend\controllers\BackendController
         }
 
         $this->throwNotFound();
-    }
-
-    public function actionCreate()
-    {
-        $path = Yii::$app->request->post('path');
-        $folder = Yii::$app->request->post('folder');
-
-        if (Yii::$app->request->isPost && !empty(trim($folder))) {
-            try {
-                $newDirPath = trim(trim($path, '/')) . '/' . trim(trim($folder, '/'));
-                $created = $this->module->fs->createDir($newDirPath);
-                if ($created === false) {
-                    Yii::$app->session->setFlash('error', Yii::t('app', 'Create folder failed'));
-                } else {
-                    Yii::$app->session->setFlash('success', Yii::t('app', 'Create folder success'));
-                }
-            } catch (\Exception $e) {
-                Yii::$app->session->setFlash('error', $e->getMessage());
-            }
-        }
-
-        return $this->redirect(['index', 'path' => $path]);
     }
 
     public function actionPopup($path = '')

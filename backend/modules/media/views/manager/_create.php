@@ -4,20 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 ?>
-<div class="upload-form">
+<div class="create-form">
 
-    <?php
-    $form = ActiveForm::begin([
-        'action' => ['upload'],
-        'options' => [
-            'enctype' => 'multipart/form-data',
-        ],
-    ]);
-    ?>
+    <?php $form = ActiveForm::begin(['action' => ['create']]); ?>
 
     <?= $form->field($model, 'path')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'files[]')->fileInput(['multiple' => true]) ?>
+    <?= $form->field($model, 'folder')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Submit', ['class' => 'btn btn-primary', 'name' => 'submit-button']) ?>

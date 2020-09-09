@@ -3,24 +3,13 @@
 namespace backend\modules\media\models;
 
 use Yii;
-use yii\base\Model;
 
-class UploadForm extends Model
+class UploadForm extends PathModel
 {
-    /**
-     * @var string
-     */
-    public $path;
-
     /**
      * @var \yii\web\UploadedFile
      */
     public $files;
-
-    /**
-     * File system
-     */
-    protected $fs;
 
     /**
      * @inheritdoc
@@ -36,6 +25,7 @@ class UploadForm extends Model
 
         return [
             ['path', 'string'],
+            ['path', 'trim'],
             ['files', 'required'],
             [
                 ['files'], 'file',
@@ -56,18 +46,15 @@ class UploadForm extends Model
         ];
     }
 
-    public function setFileSystem($fs)
-    {
-        $this->fs = $fs;
-    }
-
     /**
      * Upload files
-     * @param $fs
+     *
      * @throws \yii\base\Exception
      */
-    public function upload($fs)
+    public function upload()
     {
+        $this->checkPath();
+
         if (!$this->validate()) {
             throw new \yii\base\Exception(implode('<br>', (array)$this->getFirstErrors()));
         }
@@ -76,13 +63,13 @@ class UploadForm extends Model
         foreach ($this->files as $file) {
             $counter = 1;
             $filePath = "{$this->path}/{$file->baseName}.{$file->extension}";
-            while ($fs->has($filePath)) {
+            while ($this->fs->has($filePath)) {
                 $filePath = "{$this->path}/{$file->baseName}_{$counter}.{$file->extension}";
                 $counter++;
             }
 
             if ($stream = fopen($file->tempName, 'r+')) {
-                $write = $fs->writeStream($filePath, $stream);
+                $write = $this->fs->writeStream($filePath, $stream);
                 fclose($stream);
                 if (!$write) {
                     $errors[] = "Failed to write file (${filePath})";
