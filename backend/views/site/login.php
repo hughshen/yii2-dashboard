@@ -77,7 +77,7 @@ $this->title = 'Login';
                 </div>
 
                 <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                    <?= Html::submitButton('Login', ['class' => 'btn btn-lg btn-primary btn-block', 'name' => 'login-button']) ?>
                 </div>
 
                 <div class="clearfix"></div>
