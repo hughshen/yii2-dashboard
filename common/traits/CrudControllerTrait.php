@@ -69,6 +69,7 @@ trait CrudControllerTrait
                 Yii::$app->session->setFlash('success', Yii::t('app', 'Create success'));
             } catch (\Exception $e) {
                 Yii::$app->session->setFlash('error', $e->getMessage());
+                return $this->redirect(Yii::$app->request->getReferrer());
             }
 
             return $this->defaultRedirect();
@@ -90,6 +91,7 @@ trait CrudControllerTrait
                 Yii::$app->session->setFlash('success', Yii::t('app', 'Update success'));
             } catch (\Exception $e) {
                 Yii::$app->session->setFlash('error', $e->getMessage());
+                return $this->redirect(Yii::$app->request->getReferrer());
             }
 
             return $this->defaultRedirect();
@@ -114,6 +116,7 @@ trait CrudControllerTrait
             Yii::$app->session->setFlash('success', Yii::t('app', 'Delete success'));
         } catch (\Exception $e) {
             Yii::$app->session->setFlash('error', $e->getMessage());
+            return $this->redirect(Yii::$app->request->getReferrer());
         }
 
         return $this->defaultRedirect();
