@@ -21,6 +21,8 @@ return [
         'media' => [
             'class' => 'backend\modules\media\Module',
             'fsComponent' => 'fsFrontend',
+            'allowExtensions' => $params['allowExtensions'],
+            'allowMimeTypes' => $params['allowMimeTypes'],
         ],
     ],
     'components' => [

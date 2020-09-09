@@ -36,6 +36,18 @@ class FileSystem extends \yii\base\Component
     public $imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
     /**
+     * Allow extensions
+     * @var array
+     */
+    public $allowExtensions = [];
+
+    /**
+     * Allow mime types
+     * @var array
+     */
+    public $allowMimeTypes = [];
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -126,8 +138,10 @@ class FileSystem extends \yii\base\Component
             if ($ext == 'jpeg') $ext = 'jpg';
 
             try {
-                if (!$ext || !in_array($ext, ['jpg', 'png', 'gif', 'jpeg'])) {
-                    throw new \yii\base\Exception(Yii::t('app', 'Only files with these extensions are allowed: ') . implode(', ', ['jpg', 'png', 'gif', 'jpeg']));
+                if (!$ext || !in_array($ext, $this->allowExtensions)) {
+                    throw new \yii\base\Exception(
+                        Yii::t('app', 'Only files with these extensions are allowed: {0}', implode(', ', $this->allowExtensions))
+                    );
                 }
 
                 if ($fileName) {

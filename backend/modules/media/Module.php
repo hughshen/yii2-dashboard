@@ -67,6 +67,8 @@ class Module extends \yii\base\Module
             'fs' => Yii::$app->{$this->fsComponent},
             'directorySeparator' => $this->directorySeparator,
             'urlPrefix' => $this->urlPrefix,
+            'allowExtensions' => $this->allowExtensions,
+            'allowMimeTypes' => $this->allowMimeTypes,
         ]);
     }
 }

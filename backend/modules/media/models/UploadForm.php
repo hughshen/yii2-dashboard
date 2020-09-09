@@ -18,18 +18,30 @@ class UploadForm extends Model
     public $files;
 
     /**
+     * File system
+     */
+    protected $fs;
+
+    /**
      * @inheritdoc
      */
     public function rules()
     {
+        $extensions = [];
+        $mimeTypes = [];
+        if ($this->fs) {
+            $extensions = $this->fs->allowExtensions;
+            $mimeTypes = $this->fs->allowMimeTypes;
+        }
+
         return [
-            [['path', 'files'], 'required'],
             ['path', 'string'],
+            ['files', 'required'],
             [
                 ['files'], 'file',
                 'skipOnEmpty' => false,
-                'extensions' => ['jpg', 'png', 'gif', 'jpeg'],
-                'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif', 'image/jpeg'],
+                'extensions' => $extensions,
+                'mimeTypes' => $mimeTypes,
                 'maxSize' => 10 * 1024 * 1024,
                 'maxFiles' => 10,
                 'checkExtensionByMimeType' => false,
@@ -42,6 +54,11 @@ class UploadForm extends Model
         return [
             'files' => Yii::t('app', 'Files'),
         ];
+    }
+
+    public function setFileSystem($fs)
+    {
+        $this->fs = $fs;
     }
 
     /**

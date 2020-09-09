@@ -12,13 +12,15 @@ class ManagerController extends \backend\controllers\BackendController
     public function actionIndex($path = '', $search = '')
     {
         $model = new UploadForm();
+        $model->setFileSystem($this->module->fs);
+
         if (Yii::$app->request->isPost) {
             try {
                 $model->load(Yii::$app->request->post());
                 $model->files = UploadedFile::getInstances($model, 'files');
 
                 $path = $this->module->fs->normalizePath($model->path);
-                if (empty($path) || !$this->module->fs->has($path)) {
+                if (!empty($path) && !$this->module->fs->has($path)) {
                     throw new \yii\base\Exception(Yii::t('app', 'Invalid path'));
                 }
 
