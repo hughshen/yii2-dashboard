@@ -39,6 +39,10 @@ class ConfigController extends BackendController
             $updated = false;
 
             foreach (Yii::$app->request->post($this->arrayName, []) as $name => $value) {
+                if (is_array($value)) {
+                    $value = implode(',', $value);
+                }
+
                 if (isset($exists[$name])) {
                     if ((string)$exists[$name] !== (string)$value) {
                         $model = $this->findModel($name);

@@ -38,22 +38,40 @@ class ExtraFieldInput extends \yii\bootstrap\Widget
         $html = Html::label($this->getLabel(), $inputId, ['class' => 'control-label']);
         switch ($options['inputType']) {
             case 'text':
-                $html .= Html::textInput($inputName, $inputValue, ['class' => 'form-control', 'id' => $inputId]);
+                $html .= Html::textInput($inputName, $inputValue, ArrayHelper::merge(
+                    ['class' => 'form-control', 'id' => $inputId], $options['widgetOptions']
+                ));
                 break;
             case 'password':
-                $html .= Html::passwordInput($inputName, $inputValue, ['class' => 'form-control', 'id' => $inputId]);
+                $html .= Html::passwordInput($inputName, $inputValue, ArrayHelper::merge(
+                    ['class' => 'form-control', 'id' => $inputId], $options['widgetOptions']
+                ));
                 break;
             case 'textarea':
-                $html .= Html::textarea($inputName, $inputValue, ['class' => 'form-control', 'id' => $inputId, 'rows' => 4]);
+                $html .= Html::textarea($inputName, $inputValue, ArrayHelper::merge(
+                    ['class' => 'form-control', 'id' => $inputId, 'rows' => 4], $options['widgetOptions']
+                ));
                 break;
             case 'image':
-                $html .= \backend\modules\media\widgets\TextInput::widget(['name' => $inputName, 'value' => $inputValue, 'id' => $inputId]);
+                $html .= \backend\modules\media\widgets\TextInput::widget(ArrayHelper::merge(
+                    ['name' => $inputName, 'value' => $inputValue, 'id' => $inputId], $options['widgetOptions']
+                ));
+                break;
+            case 'images':
+                $html .= \backend\modules\media\widgets\GroupInput::widget(ArrayHelper::merge(
+                    ['name' => $inputName, 'value' => $inputValue, 'id' => $inputId], $options['widgetOptions']
+                ));
                 break;
             case 'dropdown':
-                $html .= Html::dropDownList($inputName, $inputValue, $options['valueList'], ['class' => 'form-control', 'id' => $inputId, 'prompt' => $options['promptText']]);
+                $html .= Html::dropDownList($inputName, $inputValue, $options['valueList'], ArrayHelper::merge(
+                    ['class' => 'form-control', 'id' => $inputId, 'prompt' => $options['promptText']],
+                    $options['widgetOptions']
+                ));
                 break;
             case 'checkboxlist':
-                $html .= Html::checkboxList($inputName, $inputValue, $options['valueList'], ['id' => $inputId]);
+                $html .= Html::checkboxList($inputName, $inputValue, $options['valueList'], ArrayHelper::merge(
+                    ['id' => $inputId], $options['widgetOptions']
+                ));
                 break;
         }
 
@@ -77,6 +95,7 @@ class ExtraFieldInput extends \yii\bootstrap\Widget
         $this->_options['valueData'] = [];
         $this->_options['arrayName'] = 'ExtraFields';
         $this->_options['promptText'] = null;
+        $this->_options['widgetOptions'] = [];
 
         $this->options = ArrayHelper::merge($this->_options, $this->options);
     }

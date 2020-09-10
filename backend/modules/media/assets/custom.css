@@ -102,3 +102,13 @@
     width: auto;
     height: 150px;
 }
+
+.media-input-wrap .group-thumbnail {
+    height: auto;
+}
+
+.media-input-wrap .group-thumbnail img {
+    width: auto;
+    height: 150px;
+    display: block;
+}

@@ -79,7 +79,11 @@
                 $preview.css('display', 'none');
             } else {
                 $preview.css('display', '');
-                $preview.find('img').eq(0).attr('src', url);
+                if ($preview.prop('tagName') === 'IMG') {
+                    $preview.attr('src', url);
+                } else {
+                    $preview.find('img').eq(0).attr('src', url);
+                }
             }
         }
 

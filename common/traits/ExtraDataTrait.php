@@ -27,6 +27,10 @@ trait ExtraDataTrait
     {
         if (is_array($array)) {
             foreach ($array as $key => $val) {
+                if (is_array($val)) {
+                    $val = array_values(array_filter($val));
+                }
+
                 $this->setExtraField($key, $val);
             }
         }
