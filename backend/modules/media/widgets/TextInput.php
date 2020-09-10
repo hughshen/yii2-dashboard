@@ -36,8 +36,8 @@ class TextInput extends \yii\bootstrap\InputWidget
         $input .= Html::tag('div', Html::tag('div', Html::img($inputValue, [
             'style' => 'height: 100px; width: auto;',
         ])), [
-            'id' => $this->id . '-view',
-            'class' => 'image-input-view',
+            'id' => $this->id . '-preview',
+            'class' => 'image-input-preview',
             'style' => $viewStyle,
         ]);
         // View end
@@ -50,6 +50,9 @@ class TextInput extends \yii\bootstrap\InputWidget
             'id' => $this->id . '-toggle',
             'class' => 'btn btn-success media-manager-toggle',
             'style' => 'margin-bottom: 0px; position: absolute; bottom: 0; left: 0;',
+            'data-input' => "#{$this->id}",
+            'data-preview' => "#{$this->id}-preview",
+
         ]);
         $input .= Html::endTag('div');
 
@@ -62,13 +65,17 @@ class TextInput extends \yii\bootstrap\InputWidget
         MediaAsset::register($view);
 
         $view->registerJs('
-        initMediaManager({
-            id: "' . $this->id . '-modal",
-            target: "#' . $this->id . '",
-            targetView: "#' . $this->id . '-view",
-            toggle: "#' . $this->id . '-toggle",
-            managerUrl: "' . Url::to(['/media/manager/popup']) . '",
+        ;MediaManager.init({
+            title: "' . Yii::t('app', 'Media Manager') . '",
+            mediaUrl: "' . Url::to(['/media/manager/popup']) . '",
         });
-        ', \yii\web\View::POS_END);
+        ', \yii\web\View::POS_END, 'media-manager-init-script');
+
+        $toggleId = "#{$this->id}-toggle";
+        $view->registerJs("
+        ;$('{$toggleId}').on('click', function() {
+            MediaManager.setToggle('{$toggleId}', true);
+        });
+        ", \yii\web\view::POS_END);
     }
 }
