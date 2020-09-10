@@ -93,13 +93,12 @@
 
 /* Input widget */
 .media-input-wrap .media-input-preview {
-    width: 100px;
-    height: 100px;
+    max-width: 150px;
     overflow: hidden;
     margin-bottom: 10px;
 }
 
 .media-input-wrap .media-input-preview img {
     width: auto;
-    height: 100px;
+    height: 150px;
 }
