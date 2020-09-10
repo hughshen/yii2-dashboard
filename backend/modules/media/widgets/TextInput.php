@@ -5,23 +5,12 @@ namespace backend\modules\media\widgets;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\Html;
-use yii\bootstrap\Modal;
-use yii\helpers\ArrayHelper;
 
-class TextInput extends \yii\bootstrap\InputWidget
+class TextInput extends BaseInput
 {
-    public $id;
-
     public function run()
     {
-        if ($this->hasModel()) {
-            $this->id = Html::getInputId($this->model, $this->attribute);
-            $inputName = Html::getInputName($this->model, $this->attribute);
-            $inputValue = $this->model{$this->attribute};
-        } else {
-            $inputValue = $this->value;
-            $inputName = $this->name;
-        }
+        $this->parseInputParams();
 
         $this->registerClientScript();
 
@@ -29,10 +18,10 @@ class TextInput extends \yii\bootstrap\InputWidget
         $input .= Html::beginTag('div', ['class' => 'media-input-wrap']);
 
         // Preview
-        $input .= Html::tag('div', Html::tag('div', Html::img($inputValue)), [
+        $input .= Html::tag('div', Html::img($this->inputValue, ['class' => 'img-thumbnail']), [
             'id' => $this->id . '-preview',
             'class' => 'media-input-preview',
-            'style' => !$inputValue ? 'display: none;' : '',
+            'style' => !$this->inputValue ? 'display: none;' : '',
         ]);
 
         // Input group
@@ -50,7 +39,7 @@ class TextInput extends \yii\bootstrap\InputWidget
         $input .= Html::endTag('div');
 
         // Input
-        $input .= Html::textInput($inputName, $inputValue, [
+        $input .= Html::textInput($this->inputName, $this->inputValue, [
             'id' => $this->id,
             'class' => 'form-control',
         ]);
@@ -65,16 +54,9 @@ class TextInput extends \yii\bootstrap\InputWidget
 
     protected function registerClientScript()
     {
+        $this->registerInitScript();
+
         $view = $this->getView();
-        MediaAsset::register($view);
-
-        $view->registerJs('
-        ;MediaManager.init({
-            title: "' . Yii::t('app', 'Media Manager') . '",
-            mediaUrl: "' . Url::to(['/media/manager/popup']) . '",
-        });
-        ', \yii\web\View::POS_END, 'media-manager-init-script');
-
         $toggleId = "#{$this->id}-toggle";
         $view->registerJs("
         ;$('{$toggleId}').on('click', function() {
