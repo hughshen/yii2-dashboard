@@ -25,35 +25,39 @@ class TextInput extends \yii\bootstrap\InputWidget
 
         $this->registerClientScript();
 
-        $viewStyle = 'width: 100px; height: 100px; overflow: hidden; margin-bottom: 10px;';
-        if (!$inputValue) {
-            $viewStyle .= ' display: none;';
-        }
-
         $input = '';
-        $input .= Html::beginTag('div', ['class' => 'image-input-wrap', 'style' => 'position: relative;']);
-        // View
-        $input .= Html::tag('div', Html::tag('div', Html::img($inputValue, [
-            'style' => 'height: 100px; width: auto;',
-        ])), [
+        $input .= Html::beginTag('div', ['class' => 'media-input-wrap']);
+
+        // Preview
+        $input .= Html::tag('div', Html::tag('div', Html::img($inputValue)), [
             'id' => $this->id . '-preview',
-            'class' => 'image-input-preview',
-            'style' => $viewStyle,
+            'class' => 'media-input-preview',
+            'style' => !$inputValue ? 'display: none;' : '',
         ]);
-        // View end
+
+        // Input group
+        $input .= Html::beginTag('div', ['class' => 'input-group']);
+
+        // Toggle
+        $input .= Html::beginTag('div', ['class' => 'input-group-btn']);
+        $input .= Html::tag('button', '<span class="glyphicon glyphicon-picture"></span>', [
+            'id' => $this->id . '-toggle',
+            'class' => 'btn btn-success media-input-toggle',
+            'type' => 'button',
+            'data-input' => "#{$this->id}",
+            'data-preview' => "#{$this->id}-preview",
+        ]);
+        $input .= Html::endTag('div');
+
+        // Input
         $input .= Html::textInput($inputName, $inputValue, [
             'id' => $this->id,
             'class' => 'form-control',
-            'style' => 'padding-left: 45px;',
         ]);
-        $input .= Html::tag('span', '<i class="glyphicon glyphicon-picture"></i>', [
-            'id' => $this->id . '-toggle',
-            'class' => 'btn btn-success media-manager-toggle',
-            'style' => 'margin-bottom: 0px; position: absolute; bottom: 0; left: 0;',
-            'data-input' => "#{$this->id}",
-            'data-preview' => "#{$this->id}-preview",
 
-        ]);
+        $input .= Html::endTag('div');
+        // Input group end
+
         $input .= Html::endTag('div');
 
         return $input;
