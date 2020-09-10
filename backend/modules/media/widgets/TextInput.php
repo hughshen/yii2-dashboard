@@ -76,6 +76,6 @@ class TextInput extends \yii\bootstrap\InputWidget
         ;$('{$toggleId}').on('click', function() {
             MediaManager.setToggle('{$toggleId}', true);
         });
-        ", \yii\web\view::POS_END);
+        ", \yii\web\View::POS_END);
     }
 }
