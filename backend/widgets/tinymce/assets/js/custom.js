@@ -163,6 +163,7 @@
                         height = Math.min(window.innerHeight - 120, 500);
                     editor.focus(false);
 
+                    $('body').addClass('modal-open');
                     win = editor.windowManager.open({
                         title: params.managerTitle,
                         body: [{
@@ -178,7 +179,10 @@
                         height: height,
                         inline: true,
                         resizable: false,
-                        maximizable: false
+                        maximizable: false,
+                        onClose: function () {
+                            $('body').removeClass('modal-open');
+                        }
                     });
 
                     var winEl = $(win.getEl());
