@@ -33,7 +33,7 @@
                 'searchreplace visualblocks code',
                 'insertdatetime media table contextmenu paste code imagetools',
             ],
-            toolbar: 'undo redo | formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | image filemanager link unlink code',
+            toolbar: 'undo redo | formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | image media filemanager link unlink code',
 
             relative_urls: false,
 
