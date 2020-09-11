@@ -40,7 +40,6 @@
             // Upload
             automatic_uploads: true,
             images_reuse_filename: true,
-            file_picker_types: 'image',
             images_upload_handler: function (blobInfo, success, failure) {
                 var formData = new FormData();
                 formData.append('files', blobInfo.blob(), blobInfo.filename());
@@ -48,17 +47,63 @@
                 $.ajax({
                     url: params.uploadUrl,
                     type: 'POST',
+                    cache: false,
+                    data: formData,
+                    dataType: 'json',
                     processData: false,
                     contentType: false,
-                    data: formData,
                     success: function (data) {
                         if (data.status) {
                             success(data.paths[0]);
                         } else {
                             failure(data.message);
                         }
+                    },
+                    error: function (jqXHR, textStatus) {
+                        failure(textStatus);
                     }
                 });
+            },
+            file_picker_types: 'file media',
+            file_picker_callback: function (callback, value, meta) {
+                var input = document.createElement('input');
+                input.setAttribute('type', 'file');
+
+                if (meta.filetype === 'image') {
+                    input.setAttribute('accept', 'image/*');
+                } else if (meta.filetype === 'media') {
+                    input.setAttribute('accept', 'audio/*,video/*');
+                } else {
+                    input.setAttribute('accept', '*/*');
+                }
+
+                input.onchange = function () {
+                    var file = this.files[0];
+                    var formData = new FormData();
+                    formData.append('files', file);
+
+                    $.ajax({
+                        url: params.uploadUrl,
+                        type: 'POST',
+                        cache: false,
+                        data: formData,
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data.status) {
+                                callback(data.paths[0], {title: file.name});
+                            } else {
+                                window.alert(data.message);
+                            }
+                        },
+                        error: function (jqXHR, textStatus) {
+                            window.alert(textStatus);
+                        }
+                    });
+                };
+
+                input.click();
             },
 
             // Setup

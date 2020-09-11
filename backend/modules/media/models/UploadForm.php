@@ -73,7 +73,7 @@ class UploadForm extends PathModel
                 $filePath = "{$this->path}/{$file->baseName}_{$counter}.{$file->extension}";
                 $counter++;
             }
-            $paths[] = $this->fs->urlPrefix . $filePath;
+            $paths[] = $this->fs->buildUrl($filePath);
 
             if ($stream = fopen($file->tempName, 'r+')) {
                 $write = $this->fs->writeStream($filePath, $stream);

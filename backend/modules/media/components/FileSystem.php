@@ -69,6 +69,15 @@ class FileSystem extends \yii\base\Component
     }
 
     /**
+     * @param $path
+     * @return string
+     */
+    public function buildUrl($path)
+    {
+        return rtrim($this->urlPrefix, '/') . '/' . ltrim($path, '/');
+    }
+
+    /**
      * @param string $path
      * @param boolean $recursive
      * @param string $filter
@@ -104,7 +113,7 @@ class FileSystem extends \yii\base\Component
 
             if ($f['type'] === 'file') {
                 // Set file url
-                $f['url'] = $this->urlPrefix . trim($f['path']);
+                $f['url'] = $this->buildUrl($f['path']);
 
                 // If is image
                 $f['image'] = 0;
