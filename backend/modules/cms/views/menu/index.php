@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('app', 'Create Menu'), ['create', 'parent' => $this->context->parent], ['class' => 'btn btn-success']) ?>
-        <?= HtmL::a(Yii::t('app', 'Previous'), ['index', 'parent' => 0], ['class' => 'btn btn-success']) ?>
+        <?= HtmL::a(Yii::t('app', 'Previous'), ['index', 'parent' => $this->context->prevParent], ['class' => 'btn btn-success']) ?>
         <?= HtmL::a(Yii::t('app', 'Top'), ['index', 'parent' => 0], ['class' => 'btn btn-success']) ?>
     </p>
 

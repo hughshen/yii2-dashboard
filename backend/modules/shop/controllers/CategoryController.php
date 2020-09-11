@@ -15,10 +15,18 @@ class CategoryController extends \backend\controllers\BackendController
 
     public $parent;
 
+    public $prevParent;
+
     public function init()
     {
         parent::init();
         $this->parent = Yii::$app->request->get('parent', 0);
+
+        $this->prevParent = 0;
+        if ($this->parent > 0) {
+            $parentModel = Category::findOne($this->parent);
+            $this->prevParent = $parentModel->parent;
+        }
     }
 
     protected function getSearchClassName()
