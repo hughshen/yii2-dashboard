@@ -5,10 +5,9 @@
             uploadUrl: '/media/upload',
             deleteUrl: '/media/delete',
             managerUrl: '/media/list',
+            managerTitle: 'File Manager',
             managerPage: '1',
             managerFolder: '',
-            allowExtensions: ['jpg', 'png', 'gif', 'jpeg'],
-            allowMimeTypes: 'image/jpeg,image/png,image/gif,image/jpeg',
         };
 
         if (arguments[1] && typeof arguments[1] === 'object') {
@@ -34,7 +33,7 @@
                 'searchreplace visualblocks code',
                 'insertdatetime media table contextmenu paste code imagetools',
             ],
-            toolbar: 'undo redo | formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | localimage filemanager link unlink code',
+            toolbar: 'undo redo | formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | image filemanager link unlink code',
 
             relative_urls: false,
 
@@ -43,81 +42,27 @@
             images_reuse_filename: true,
             file_picker_types: 'image',
             images_upload_handler: function (blobInfo, success, failure) {
+                var formData = new FormData();
+                formData.append('files', blobInfo.blob(), blobInfo.filename());
+
                 $.ajax({
                     url: params.uploadUrl,
                     type: 'POST',
-                    data: {
-                        image: 'data:image/jpeg;base64,' + blobInfo.base64(),
-                        filename: blobInfo.name(),
-                    },
+                    processData: false,
+                    contentType: false,
+                    data: formData,
                     success: function (data) {
                         if (data.status) {
-                            success(data.path);
+                            success(data.paths[0]);
                         } else {
-                            alert(data.msg);
+                            failure(data.message);
                         }
                     }
                 });
             },
+
             // Setup
             setup: function (editor) {
-                // Insert local image
-                var node = document.createElement('input');
-                node.setAttribute('type', 'file');
-                node.setAttribute('multiple', true);
-                node.setAttribute('accept', params.allowMimeTypes);
-
-                var Exts = params.allowExtensions;
-
-                function toggleLocalImageInput() {
-                    node.click();
-                }
-
-                function uploadHandler(file) {
-                    var ext = file.name.split('.').pop().toLowerCase(),
-                        extError = Exts.indexOf(ext) == -1;
-                    if (extError) {
-                        editor.windowManager.alert('Only files with these extensions are allowed: ' + Exts.join(', '));
-                        return;
-                    }
-
-                    if (typeof window.FileReader !== 'function') {
-                        editor.windowManager.alert('Your browser does not support HTML5 native. Try Firefox 3, Safari 4, or Chrome.');
-                    }
-
-                    var reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = function () {
-                        var id = 'blobid' + (new Date()).getTime() + Math.floor(Math.random() * 1000);
-                        var blobCache = editor.editorUpload.blobCache;
-                        var base64 = reader.result.split(',')[1];
-                        var blobInfo = blobCache.create(id, file, base64);
-                        blobCache.add(blobInfo);
-                        if (typeof editor.settings.images_upload_handler === 'function') {
-                            editor.settings.images_upload_handler(blobInfo, function (path) {
-                                editor.insertContent('<img src="' + path + '"/>');
-                            }, function (path) {
-                            });
-                        }
-                    };
-                }
-
-                node.onchange = function () {
-                    if (this.files.length) {
-                        for (var i = 0; i < this.files.length; i++) {
-                            uploadHandler(this.files[i]);
-                        }
-                    }
-                    node.value = '';
-                };
-
-                editor.addButton('localimage', {
-                    icon: 'image',
-                    tooltip: 'Insert file',
-                    onclick: toggleLocalImageInput,
-                });
-                // Insert local image end
-
                 // File manager
                 var win;
 
@@ -157,7 +102,7 @@
                                     data: {paths: paths},
                                     dataType: 'json',
                                     success: function (data) {
-                                        editor.windowManager.alert(data.msg);
+                                        editor.windowManager.alert(data.message);
                                         if (data.status) loadFilesHtml();
                                     }
                                 });
@@ -174,7 +119,7 @@
                     editor.focus(false);
 
                     win = editor.windowManager.open({
-                        title: 'File List',
+                        title: params.managerTitle,
                         body: [{
                             type: 'container',
                             html: '<div class="file-manager-wrap" id="file-manager-wrap" style="height: ' + (height - 40) + 'px;"></div>',

@@ -5,7 +5,6 @@ namespace backend\widgets\tinymce;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\Html;
-use yii\helpers\Json;
 
 class TinyMCEEditor extends \yii\widgets\InputWidget
 {
@@ -54,9 +53,6 @@ class TinyMCEEditor extends \yii\widgets\InputWidget
         $view = $this->getView();
         TinyMCEAsset::register($view);
 
-        $allowExtensions = Yii::$app->params['allowExtensions'];
-        $allowMimeTypes = Yii::$app->params['allowMimeTypes'];
-
         $view->registerJs('
         initTinyMCE({
             selector: "#' . $this->id . '",
@@ -64,8 +60,7 @@ class TinyMCEEditor extends \yii\widgets\InputWidget
             uploadUrl: "' . $this->fileUploadUrl . '",
             deleteUrl: "' . $this->fileDeleteUrl . '",
             managerUrl: "' . $this->fileManagerUrl . '",
-            allowExtensions: ' . Json::encode($allowExtensions) . ',
-            allowMimeTypes: "' . implode(',', $allowMimeTypes) . '",        
+            managerTitle: "' . Yii::t('app', 'File manager') . '",
         });
         ', \yii\web\View::POS_END);
     }

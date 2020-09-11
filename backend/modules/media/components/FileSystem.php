@@ -120,56 +120,6 @@ class FileSystem extends \yii\base\Component
     }
 
     /**
-     * @param $encodedData
-     * @param null $fileName
-     * @return bool
-     * @throws \Exception
-     */
-    public function saveBase64Data($encodedData, $fileName = null)
-    {
-        @list($type, $data) = explode(';', $encodedData);
-        @list(, $data) = explode(',', $data);
-
-        $data = base64_decode($data);
-
-        if ($type && $data) {
-            @list(, $ext) = explode('/', $type);
-
-            if ($ext == 'jpeg') $ext = 'jpg';
-
-            try {
-                if (!$ext || !in_array($ext, $this->allowExtensions)) {
-                    throw new \yii\base\Exception(
-                        Yii::t('app', 'Only files with these extensions are allowed: {0}', implode(', ', $this->allowExtensions))
-                    );
-                }
-
-                if ($fileName) {
-                    $fileName = (string)time();
-                }
-
-                $counter = 1;
-                $filePath = "{$fileName}.{$ext}";
-                while ($this->has($filePath)) {
-                    $filePath = "{$fileName}_{$counter}.{$ext}";
-                    $counter++;
-                }
-
-                $write = $this->write($filePath, $data);
-                if (!$write) {
-                    throw new \yii\base\Exception("Failed to write file (${filePath})");
-                }
-
-                return $this->urlPrefix . trim($filePath);
-            } catch (\Exception $e) {
-                throw $e;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @param string $method
      * @param array $parameters
      * @return mixed

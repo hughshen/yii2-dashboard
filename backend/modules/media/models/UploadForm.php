@@ -46,6 +46,11 @@ class UploadForm extends PathModel
         ];
     }
 
+    public function formName()
+    {
+        return '';
+    }
+
     /**
      * Upload files
      *
@@ -59,6 +64,7 @@ class UploadForm extends PathModel
             throw new \yii\base\Exception(implode('<br>', (array)$this->getFirstErrors()));
         }
 
+        $paths = [];
         $errors = [];
         foreach ($this->files as $file) {
             $counter = 1;
@@ -67,6 +73,7 @@ class UploadForm extends PathModel
                 $filePath = "{$this->path}/{$file->baseName}_{$counter}.{$file->extension}";
                 $counter++;
             }
+            $paths[] = $this->fs->urlPrefix . $filePath;
 
             if ($stream = fopen($file->tempName, 'r+')) {
                 $write = $this->fs->writeStream($filePath, $stream);
@@ -82,5 +89,7 @@ class UploadForm extends PathModel
         if (count($errors) > 0) {
             throw new \yii\base\Exception(implode('<br>', $errors));
         }
+
+        return $paths;
     }
 }
