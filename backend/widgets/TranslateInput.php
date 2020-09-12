@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\widgets;
 
 use Yii;
@@ -31,7 +32,7 @@ class TranslateInput extends \yii\bootstrap\Widget
 
             if ($tabItems) {
                 return Tabs::widget([
-                   'items' => $tabItems,
+                    'items' => $tabItems,
                 ]);
             }
         }
@@ -71,23 +72,51 @@ class TranslateInput extends \yii\bootstrap\Widget
             }
 
             if (isset($attrOption['type'])) {
+                $widgetOptions = [];
+                if (isset($attrOption['widgetOptions'])) {
+                    $widgetOptions = $attrOption['widgetOptions'];
+                }
+
                 switch ($attrOption['type']) {
                     case 'editor':
                         $content .= '<div class="form-group field-' . $inputId . '">
                         ' . Html::activeLabel($this->model, $attr, ['for' => $inputId, 'class' => 'control-label']) . '
                         ' . \backend\widgets\tinymce\TinyMCEEditor::widget([
+                                'id' => $inputId,
                                 'name' => $inputName,
                                 'value' => $inputValue,
-                                'id' => $inputId,
-                        ]) . '
+                            ]) . '
                         <div class="help-block"></div>
                         </div>';
                         break;
                     case 'textarea':
-                        $content .= $this->form->field($this->model, $attr)->textarea(['name' => $inputName, 'value' => $inputValue, 'id' => $inputId, 'rows' => 3]);
+                        $content .= $this->form->field($this->model, $attr)->textarea([
+                            'id' => $inputId,
+                            'rows' => 3,
+                            'name' => $inputName,
+                            'value' => $inputValue,
+                        ]);
+                        break;
+                    case 'images':
+                        $content .= '<div class="form-group field-' . $inputId . '">';
+                        $content .= Html::activeLabel($this->model, $attr, [
+                            'for' => $inputId,
+                            'class' => 'control-label'
+                        ]);
+                        $content .= \backend\modules\media\widgets\ImagesInput::widget(ArrayHelper::merge([
+                            'id' => $inputId,
+                            'name' => $inputName,
+                            'value' => $inputValue,
+                        ], $widgetOptions));
+                        $content .= '<div class="help-block"></div>
+                        </div>';
                         break;
                     default:
-                        $content .= $this->form->field($this->model, $attr)->textInput(['name' => $inputName, 'value' => $inputValue, 'id' => $inputId]);
+                        $content .= $this->form->field($this->model, $attr)->textInput([
+                            'id' => $inputId,
+                            'name' => $inputName,
+                            'value' => $inputValue,
+                        ]);
                         break;
                 }
             }

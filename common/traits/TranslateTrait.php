@@ -50,6 +50,10 @@ trait TranslateTrait
             foreach ($data as $langKey => $val) {
                 if (is_array($val) && $val) {
                     foreach ($val as $field => $value) {
+                        if (is_array($value)) {
+                            $value = json_encode($value);
+                        }
+
                         $model = Translate::findOne([
                             'table_name' => static::transTableName(),
                             'table_id' => $this->getPrimaryKey(),
@@ -92,7 +96,8 @@ trait TranslateTrait
                 foreach ($combined as $key => $val) {
                     try {
                         $this->{$key} = $val;
-                    } catch (\Exception $e) {}
+                    } catch (\Exception $e) {
+                    }
                 }
             }
         }

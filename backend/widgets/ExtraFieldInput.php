@@ -58,7 +58,7 @@ class ExtraFieldInput extends \yii\bootstrap\Widget
                 ));
                 break;
             case 'images':
-                $html .= \backend\modules\media\widgets\GroupInput::widget(ArrayHelper::merge(
+                $html .= \backend\modules\media\widgets\ImagesInput::widget(ArrayHelper::merge(
                     ['name' => $inputName, 'value' => $inputValue, 'id' => $inputId], $options['widgetOptions']
                 ));
                 break;
