@@ -2,7 +2,6 @@
 
 namespace common\components;
 
-use Yii;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use common\models\Config;
@@ -19,6 +18,7 @@ class Mailer
     public $smtp_port;
     public $smtp_secure;
 
+    public $charSet;
     public $subject;
     public $body;
     public $isHtml;
@@ -38,6 +38,7 @@ class Mailer
         $this->smtp_port = Config::byName('smtp_port');
         $this->smtp_secure = Config::byName('smtp_secure');
 
+        $this->charSet = 'utf-8';
         $this->isHtml = true;
 
         $this->debugMode = false;
@@ -94,7 +95,7 @@ class Mailer
             if ($this->attachments) {
                 if (is_array($this->attachments)) {
                     foreach ($this->attachments as $val) {
-                        $mail->addAttachment($val);    
+                        $mail->addAttachment($val);
                     }
                 } else {
                     $mail->addAttachment($this->attachments);
@@ -113,6 +114,7 @@ class Mailer
             }
 
             //Content
+            $mail->CharSet = $this->charSet;
             $mail->isHTML((bool)$this->isHtml);
             $mail->Subject = $this->subject;
             $mail->Body = $this->body;
@@ -125,7 +127,5 @@ class Mailer
         } catch (Exception $e) {
             return 'Message could not be sent. Mailer Error: ' . $mail->ErrorInfo;
         }
-
-        return false;
     }
 }
