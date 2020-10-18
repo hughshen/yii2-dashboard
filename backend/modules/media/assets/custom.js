@@ -12,6 +12,7 @@
         id: 'media-manager',
         title: 'Media Manager',
         mediaUrl: '/media/list',
+        uploadUrl: '/media/upload'
     },
 
     init: function () {
@@ -46,6 +47,41 @@
         self.$wrap.on('click', '.breadcrumb .media-link', function () {
             self.currentPath = $(this).attr('data-path');
             self.dataReload(true);
+        });
+
+        self.$wrap.on('click', '.upload-icon', function () {
+            var that = self;
+
+            var input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.onchange = function () {
+                var file = this.files[0];
+                var formData = new FormData();
+                formData.append('path', that.currentPath);
+                formData.append('files', file);
+
+                $.ajax({
+                    url: that.options.uploadUrl,
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.status) {
+                            that.dataReload(true);
+                        } else {
+                            window.alert(data.message);
+                        }
+                    },
+                    error: function (jqXHR, textStatus) {
+                        window.alert(textStatus);
+                    }
+                });
+            };
+
+            input.click();
         });
 
         self.$wrap.on('click', '.pagination a', function (e) {

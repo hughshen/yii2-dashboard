@@ -27,6 +27,7 @@ class BaseInput extends \yii\bootstrap\InputWidget
         ;MediaManager.init({
             title: "' . Yii::t('app', 'Media Manager') . '",
             mediaUrl: "' . Url::to(['/media/manager/popup']) . '",
+            uploadUrl: "' . Url::to(['/media/api/upload']) . '",
         });
         ', \yii\web\View::POS_END, 'media-manager-init-script');
     }

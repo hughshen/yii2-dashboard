@@ -26,6 +26,16 @@
     border-radius: 4px;
 }
 
+.media-paths .upload-icon {
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+    top: 7px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+
 .media-box .media-item {
     width: 170px;
     height: 170px;

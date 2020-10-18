@@ -35,6 +35,7 @@ class ApiController extends \backend\controllers\BackendController
         $model->setFileSystem($this->module->fs);
 
         try {
+            $model->path = Yii::$app->request->post('path', '');
             $model->files = UploadedFile::getInstances($model, 'files');
             $paths = $model->upload();
 
