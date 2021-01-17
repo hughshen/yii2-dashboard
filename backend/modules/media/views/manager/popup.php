@@ -7,7 +7,12 @@ use yii\widgets\LinkPager;
 ?>
 <div class="row">
     <div class="col-md-12">
-        <?= $this->render('_box', ['list' => $list, 'mediaName' => true, 'disableUrl' => true]) ?>
+        <?= $this->render('_box', [
+            'list' => $list,
+            'mediaName' => true,
+            'disableUrl' => true,
+            'uploadIcon' => true,
+        ]) ?>
     </div>
 </div>
 <div class="row">
