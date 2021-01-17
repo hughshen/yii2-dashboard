@@ -73,6 +73,15 @@ class ExtraFieldInput extends \yii\bootstrap\Widget
                     ['id' => $inputId], $options['widgetOptions']
                 ));
                 break;
+            case 'colorpicker':
+                $html .= Html::input('color', $inputName, $inputValue, ArrayHelper::merge(
+                    [
+                        'id' => $inputId,
+                        'class' => 'form-control',
+                        'style' => 'width: 80px;',
+                    ], $options['widgetOptions']
+                ));
+                break;
         }
 
         return Html::tag('div', $html, ['class' => "form-group field-{$inputId}"]);
@@ -80,7 +89,14 @@ class ExtraFieldInput extends \yii\bootstrap\Widget
 
     protected function getLabel()
     {
-        return (!empty($this->options['inputLabel']) ? $this->options['inputLabel'] : trim(ucwords(str_replace('_', ' ', $this->options['fieldName']))));
+        if (!empty($this->options['inputLabel'])) {
+            $label = $this->options['inputLabel'];
+        } else {
+            $label = trim(ucwords(str_replace('_', ' ', $this->options['fieldName'])));
+            $label = Yii::t('app', $label);
+        }
+
+        return $label;
     }
 
     protected function initOptions()
