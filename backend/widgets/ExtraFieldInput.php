@@ -62,6 +62,11 @@ class ExtraFieldInput extends \yii\bootstrap\Widget
                     ['name' => $inputName, 'value' => $inputValue, 'id' => $inputId], $options['widgetOptions']
                 ));
                 break;
+            case 'file':
+                $html .= \backend\modules\media\widgets\FileInput::widget(ArrayHelper::merge(
+                    ['name' => $inputName, 'value' => $inputValue, 'id' => $inputId], $options['widgetOptions']
+                ));
+                break;
             case 'dropdown':
                 $html .= Html::dropDownList($inputName, $inputValue, $options['valueList'], ArrayHelper::merge(
                     ['class' => 'form-control', 'id' => $inputId, 'prompt' => $options['promptText']],
