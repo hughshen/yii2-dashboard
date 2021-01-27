@@ -3,6 +3,7 @@
 namespace common\models\cms;
 
 use Yii;
+use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
 class Category extends \yii\db\ActiveRecord
@@ -43,15 +44,27 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getRelationships()
     {
-        return $this->hasMany(Relationship::className(), ['category_id' => 'id']);
+        return $this->hasMany(Relationship::class, ['category_id' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
+     * @throws \yii\base\InvalidConfigException
      */
     public function getPosts()
     {
-        return $this->hasMany(Post::className(), ['id' => 'post_id'])->viaTable(Relationship::tableName(), ['category_id' => 'id'])->andOnCondition(['status' => Post::STATUS_PUBLISH, 'type' => Post::typeName()])->orderBy('sorting ASC, created_at DESC');
+        return $this->hasMany(Post::class, ['id' => 'post_id'])
+            ->viaTable(Relationship::tableName(), ['category_id' => 'id'])
+            ->andOnCondition(['status' => Post::STATUS_PUBLISH, 'deleted_at' => 0, 'type' => Post::typeName()])
+            ->orderBy('sorting ASC, created_at DESC');
+    }
+
+    /**
+     * Base orderBy wrapper
+     */
+    public function orderByWrapper(ActiveQuery $query)
+    {
+        return $query->orderBy('sorting ASC, created_at DESC');
     }
 
     /**
@@ -59,7 +72,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getPrevCat()
     {
-        return $this->hasOne(static::class, ['id' => 'parent']);
+        return $this->orderByWrapper($this->hasOne(static::class, ['id' => 'parent']));
     }
 
     /**
@@ -67,7 +80,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getPrevCats()
     {
-        return $this->hasMany(static::class, ['id' => 'parent']);
+        return $this->orderByWrapper($this->hasMany(static::class, ['id' => 'parent']));
     }
 
     /**
@@ -75,7 +88,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getNextCat()
     {
-        return $this->hasOne(static::class, ['parent' => 'id']);
+        return $this->orderByWrapper($this->hasOne(static::class, ['parent' => 'id']));
     }
 
     /**
@@ -83,7 +96,7 @@ class Category extends \yii\db\ActiveRecord
      */
     public function getNextCats()
     {
-        return $this->hasMany(static::class, ['parent' => 'id']);
+        return $this->orderByWrapper($this->hasMany(static::class, ['parent' => 'id']));
     }
 
     /**
