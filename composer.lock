@@ -50,7 +50,7 @@
             "version": "3.3.11",
             "source": {
                 "type": "git",
-                "url": "git@github.com:RobinHerbots/Inputmask.git",
+                "url": "https://github.com/RobinHerbots/Inputmask.git",
                 "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b"
             },
             "dist": {
@@ -71,7 +71,7 @@
             "version": "3.5.1",
             "source": {
                 "type": "git",
-                "url": "git@github.com:jquery/jquery-dist.git",
+                "url": "https://github.com/jquery/jquery-dist.git",
                 "reference": "4c0e4becb8263bb5b3e6dadc448d8e7305ef8215"
             },
             "dist": {
@@ -778,16 +778,16 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "5.9.0",
+            "version": "5.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "7a479e525582d09f315c2cf2a99075d6a798b535"
+                "reference": "dbd8fefb0bbe96ed15f9af4518b078ae2c20e020"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/7a479e525582d09f315c2cf2a99075d6a798b535",
-                "reference": "7a479e525582d09f315c2cf2a99075d6a798b535",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/dbd8fefb0bbe96ed15f9af4518b078ae2c20e020",
+                "reference": "dbd8fefb0bbe96ed15f9af4518b078ae2c20e020",
                 "shasum": ""
             },
             "type": "component",
@@ -828,7 +828,7 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2021-08-26T05:43:13+00:00"
+            "time": "2021-10-11T03:18:15+00:00"
         },
         {
             "name": "yiisoft/yii2",
