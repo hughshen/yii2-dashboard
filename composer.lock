@@ -11,7 +11,7 @@
             "version": "v3.3.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/twbs/bootstrap.git",
+                "url": "git@github.com:twbs/bootstrap.git",
                 "reference": "0b9c4a4007c44201dce9a6cc1a38407005c26c86"
             },
             "dist": {
@@ -50,7 +50,7 @@
             "version": "3.3.11",
             "source": {
                 "type": "git",
-                "url": "https://github.com/RobinHerbots/Inputmask.git",
+                "url": "git@github.com:RobinHerbots/Inputmask.git",
                 "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b"
             },
             "dist": {
@@ -71,7 +71,7 @@
             "version": "3.6.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jquery/jquery-dist.git",
+                "url": "git@github.com:jquery/jquery-dist.git",
                 "reference": "91ef2d8836342875f2519b5815197ea0f23613cf"
             },
             "dist": {
@@ -831,16 +831,16 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "5.10.8",
+            "version": "5.10.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "b9c50833d455adcf5ae89a6da7648ae5d65468df"
+                "reference": "e5650a256f8941a0593ec0b9d3c435f20f1d4245"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/b9c50833d455adcf5ae89a6da7648ae5d65468df",
-                "reference": "b9c50833d455adcf5ae89a6da7648ae5d65468df",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/e5650a256f8941a0593ec0b9d3c435f20f1d4245",
+                "reference": "e5650a256f8941a0593ec0b9d3c435f20f1d4245",
                 "shasum": ""
             },
             "type": "component",
@@ -881,7 +881,7 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2023-10-19T03:02:47+00:00"
+            "time": "2023-11-15T00:42:08+00:00"
         },
         {
             "name": "yiisoft/yii2",
